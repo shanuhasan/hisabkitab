@@ -12,10 +12,12 @@ class Plan extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'price',
         'duration_days',
         'customer_limit',
         'features',
+        'description',
         'is_active',
     ];
 
@@ -32,5 +34,24 @@ class Plan extends Model
     {
         return $this->hasMany(Subscription::class);
     }
-}
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(SubscriptionPayment::class);
+    }
+
+    public function isFree(): bool
+    {
+        return (float) $this->price == 0.0;
+    }
+
+    public function hasFeature(string $feature): bool
+    {
+        return !empty($this->features[$feature]);
+    }
+
+    public function getCustomerLimitFormattedAttribute(): string
+    {
+        return $this->customer_limit === -1 ? 'Unlimited' : (string) $this->customer_limit;
+    }
+}

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PlanController as AdminPlanController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ShopProfileController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WhatsappController;
 use Illuminate\Support\Facades\Route;
@@ -75,4 +77,20 @@ Route::middleware(['auth', 'tenant.active'])->group(function () {
     // Shop Profile Management (Protected & Isolated)
     Route::get('/shop/profile', [ShopProfileController::class, 'edit'])->name('shop.profile');
     Route::post('/shop/profile', [ShopProfileController::class, 'update'])->name('shop.profile.update');
+
+    // SaaS Subscription Management Routes
+    Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription.index');
+    Route::post('/subscription/checkout/order', [SubscriptionController::class, 'createOrder'])->name('subscription.checkout.order');
+    Route::post('/subscription/checkout/verify', [SubscriptionController::class, 'verifyPayment'])->name('subscription.checkout.verify');
+    Route::post('/subscription/downgrade/free', [SubscriptionController::class, 'switchToFree'])->name('subscription.downgrade.free');
+});
+
+// Razorpay Webhook Handler (External, CSRF-exempt)
+Route::post('/webhook/razorpay', [SubscriptionController::class, 'handleWebhook'])->name('webhook.razorpay');
+
+// Super Admin Plan Management Routes
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/plans', [AdminPlanController::class, 'index'])->name('plans.index');
+    Route::get('/plans/{plan}/edit', [AdminPlanController::class, 'edit'])->name('plans.edit');
+    Route::put('/plans/{plan}', [AdminPlanController::class, 'update'])->name('plans.update');
 });

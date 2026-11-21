@@ -2,30 +2,48 @@
 
 All notable changes to the HisabKitab SaaS project will be documented in this file.
 
+## [Phase 7] - 2026-11-22
+### Added
+- Created official SaaS subscription plans (`PlanSeeder`):
+  - **Free Plan**: ₹0, 25 customers, basic ledger & basic reports.
+  - **Basic Plan**: ₹99/mo, 200 customers, PDF statements & WhatsApp reminders.
+  - **Pro Plan**: ₹199/mo, unlimited customers, CSV exports, advanced reports & priority support.
+- Added database migration `2026_11_22_000007_create_subscription_management_tables.php`:
+  - Added `slug` and `description` to `plans`.
+  - Added `trial_ends_at` and `grace_ends_at` to `subscriptions`.
+  - Created `subscription_payments` table for payment audit trails.
+- Created `SubscriptionPayment` model (`app/Models/SubscriptionPayment.php`).
+- Created `SubscriptionService` (`app/Services/SubscriptionService.php`) providing:
+  - Razorpay order creation (`createRazorpayOrder`).
+  - Server-side HMAC-SHA256 signature verification and atomic activation (`verifyAndActivatePayment`).
+  - Webhook processing with HMAC-SHA256 signature verification and idempotency protection (`processWebhook`).
+  - Customer quota check (`canAddCustomer`) and feature gate check (`canAccessFeature`).
+  - Subscription status metadata with grace period detection.
+- Created `EnforceSubscriptionLimits` middleware (`app/Http/Middleware/EnforceSubscriptionLimits.php`):
+  - Blocks expired shops past grace period from executing business operations.
+  - Enforces feature gates (`csv_exports`, `pdf_statements`).
+  - Registered `'subscription'` middleware alias in `bootstrap/app.php`.
+- Exempted `/webhook/razorpay` from CSRF verification in `bootstrap/app.php`.
+- Created `SubscriptionController` (`app/Http/Controllers/SubscriptionController.php`):
+  - Subscription portal view with current status, customer quota progress bar, and pricing tiers.
+  - Order creation and payment signature verification endpoints.
+  - Razorpay webhook listener.
+- Created Super Admin Plan Management Controller (`app/Http/Controllers/Admin/PlanController.php`) and views (`resources/views/admin/plans/index.blade.php`, `resources/views/admin/plans/edit.blade.php`).
+- Built customer quota enforcement in `CustomerController@store`: prevents adding customers beyond plan limits.
+- Built feature restrictions in `ReportController@exportCsv` (Pro plan required) and `CustomerController@statementPdf` (Basic/Pro plan required).
+- Built frontend view `resources/views/subscription/index.blade.php` with Razorpay checkout integration, status card, pricing grid, and payment history.
+- Implemented and passed automated test suite in `tests/Feature/Phase7SubscriptionManagementTest.php` (9 tests, 54 assertions). Full test suite now passes 55 tests, 293 assertions (0 failures).
+
 ## [Phase 6] - 2026-11-22
 ### Added
-- Created `WhatsappService` (`app/Services/WhatsappService.php`) providing:
-  - Phone number normalization and country code validation (`cleanPhoneNumber()`).
-  - Pre-filled reminder message generators for multiple languages (Standard Hinglish, Pure Hindi, Polite English, Formal English).
-  - WhatsApp Click-to-Chat URL builder (`buildClickToChatUrl()`).
-  - Reminder audit logging (`logReminder()`) with status tracking (`initiated`, `prepared`, etc.).
-  - Statement summary share message builder (`generateStatementShareMessage()`).
-  - Payment receipt share message builder (`generateReceiptShareMessage()`).
-- Created `CurrencyHelper` (`app/Helpers/CurrencyHelper.php`) to convert monetary amounts to Indian currency words (Lakhs, Crores, Rupees, and Paise).
-- Created `WhatsappController` (`app/Http/Controllers/WhatsappController.php`) with:
-  - `sendReminder`: Handles reminder dispatch, message editing, database audit logging, and redirect to WhatsApp `wa.me` (or JSON response for AJAX).
-  - `shareStatement`: Shares account statement summary via WhatsApp.
-  - `shareReceipt`: Shares payment receipt confirmation via WhatsApp.
-- Added database migration `2026_11_22_000006_update_whatsapp_logs_table.php` updating `whatsapp_logs` table (`status` as varchar, added `template_type` and `sent_by_user_id`).
-- Built customer account statement PDF generator (`CustomerController@statementPdf` and `resources/views/customers/statement-pdf.blade.php`) featuring shop details, customer info, statement period, calculated opening balance, transaction ledger, and closing balance.
-- Built payment receipt PDF generator (`TransactionController@receiptPdf` and `resources/views/transactions/receipt-pdf.blade.php`) featuring official payment voucher, receipt number, date, amount in figures & words, mode, and remaining balance.
-- Updated `resources/views/customers/show.blade.php`:
-  - Added interactive **WhatsApp Reminder Modal** with template switcher, live message preview, and pre-send editing.
-  - Added WhatsApp Communication History table displaying previous reminders and delivery statuses.
-  - Added PDF Statement download and WhatsApp share buttons.
-- Updated `resources/views/transactions/show.blade.php` and `resources/views/transactions/ledger-print.blade.php` with PDF download and WhatsApp sharing triggers.
-- Registered new routes in `routes/web.php` for statements, receipts, and WhatsApp actions.
-- Implemented and passed automated test suite in `tests/Feature/Phase6WhatsAppAndPdfTest.php` (8 tests, 37 assertions). Full test suite now passes 46 tests, 239 assertions (0 failures).
+- Created `WhatsappService` (`app/Services/WhatsappService.php`) with multi-language reminder templates and click-to-chat URL generator.
+- Created `CurrencyHelper` (`app/Helpers/CurrencyHelper.php`) to convert monetary amounts to Indian currency words.
+- Created `WhatsappController` (`app/Http/Controllers/WhatsappController.php`).
+- Added database migration updating `whatsapp_logs` table.
+- Built customer account statement PDF generator (`CustomerController@statementPdf` and `statement-pdf.blade.php`).
+- Built payment receipt PDF generator (`TransactionController@receiptPdf` and `receipt-pdf.blade.php`).
+- Updated `show.blade.php` with interactive WhatsApp Reminder Modal and communication history table.
+- Implemented and passed automated test suite in `tests/Feature/Phase6WhatsAppAndPdfTest.php` (8 tests, 37 assertions).
 
 ## [Phase 5] - 2026-11-22
 ### Added

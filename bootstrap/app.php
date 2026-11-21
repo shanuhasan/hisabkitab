@@ -13,6 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'tenant.active' => \App\Http\Middleware\EnsureTenantIsActive::class,
+            'subscription' => \App\Http\Middleware\EnforceSubscriptionLimits::class,
+        ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'webhook/razorpay',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

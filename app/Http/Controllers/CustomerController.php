@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use App\Models\Transaction;
+use App\Services\SubscriptionService;
 use App\Services\TransactionService;
 use App\Services\WhatsappService;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -13,13 +14,15 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class CustomerController extends Controller
 {
     public function __construct(
         protected TransactionService $transactionService,
-        protected WhatsappService $whatsappService
+        protected WhatsappService $whatsappService,
+        protected SubscriptionService $subscriptionService
     ) {}
 
     /**
@@ -98,6 +101,14 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request): RedirectResponse
     {
+        $tenant = auth()->user()->tenant;
+        if ($tenant && !$this->subscriptionService->canAddCustomer($tenant)) {
+            $status = $this->subscriptionService->getSubscriptionStatus($tenant);
+            throw ValidationException::withMessages([
+                'name' => "Aapke {$status['plan']->name} ki customer limit ({$status['customer_limit']} grahak) poori ho chuki hai. Naye grahak jodne ke liye kripya apna plan upgrade karein.",
+            ]);
+        }
+
         $validated = $request->validated();
         $user = auth()->user();
 
@@ -256,6 +267,10 @@ class CustomerController extends Controller
         }
 
         $tenant = auth()->user()->tenant;
+        if ($tenant && !$this->subscriptionService->canAccessFeature($tenant, 'pdf_statements')) {
+            abort(403, 'PDF Statements are not available on your current plan. Please upgrade to Basic or Pro Plan.');
+        }
+
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
 

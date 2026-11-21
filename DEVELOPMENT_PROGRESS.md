@@ -9,56 +9,54 @@
 | **Phase 4** | Core Financial Engine (Udhaar Dena / Jama Lena & Reversals) | **Completed** | 2026-11-22 |
 | **Phase 5** | Shop Dashboard, Chart.js Analytics & Comprehensive Reporting (PDF/CSV) | **Completed** | 2026-11-22 |
 | **Phase 6** | WhatsApp Click-to-Chat Reminders, PDF Statements & Payment Receipts | **Completed** | 2026-11-22 |
-| **Phase 7** | Subscription & Plan Management (Trial, Razorpay/Stripe, Quotas) | Pending | - |
-| **Phase 8** | Super Admin Management Portal & Tenant Control Panel | Pending | - |
+| **Phase 7** | SaaS Subscription Plans, Razorpay Gateway & Quota Enforcement | **Completed** | 2026-11-22 |
+| **Phase 8** | Super Admin Management Portal & Multi-Shop Analytics | Pending | - |
 | **Phase 9** | Security Hardening, Audit Logs & Production Deployment Optimization | Pending | - |
 
 ---
 
-## Phase 6 Deliverables Summary
-- **WhatsApp Reminder Engine (`WhatsappService` & `WhatsappController`)**:
-  - Pre-composed WhatsApp reminder generator supporting multi-language templates:
-    - **Standard Hinglish (Default)**:
-      `"Namaste [Customer Name],\n\nAapke account mein ₹[Outstanding Amount] ka payment pending hai.\n\nKripya apni suvidha ke anusar payment kar dein.\n\nThank you,\n[Shop Name]"`
-    - **Pure Hindi (हिंदी)**:
-      `"नमस्ते [Customer Name],\n\nआपके खाते में ₹[Outstanding Amount] का भुगतान बाकी है।\n\nकृपया अपनी सुविधानुसार भुगतान करें।\n\nधन्यवाद,\n[Shop Name]"`
-    - **Polite English**:
-      `"Dear [Customer Name],\n\nA payment of ₹[Outstanding Amount] is pending in your account at [Shop Name]..."`
-    - **Formal English (Business)**:
-      `"Dear [Customer Name],\n\nThis is a friendly payment reminder from [Shop Name]..."`
-  - Interactive **WhatsApp Reminder Modal** on customer details:
-    - Automatically cleans phone numbers and injects Indian country code `+91`.
-    - Live template switcher with instant message preview.
-    - Editable message `<textarea>` allowing shopkeeper customization before dispatch.
-    - Direct submission to `POST /customers/{customer}/whatsapp/remind`.
-  - **Audit Logging & Reminder History**:
-    - Every reminder records an entry in `whatsapp_logs` with status `'initiated'`, phone, exact message sent, template type, and operator ID (`sent_by_user_id`).
-    - Dedicated "WhatsApp Communication History" table on customer details displaying past reminders with status badges.
-    - Architectural readiness: decoupled `WhatsappService` ready for future WhatsApp Cloud API webhook callbacks.
-- **Customer PDF Statement Generation** (`/customers/{customer}/statement/pdf`):
-  - DomPDF-optimized statement document displaying:
-    - Shop branding, address, owner contact phone, and email.
-    - Customer name, mobile number, and address.
-    - Statement period (`from_date` to `to_date`, or All-Time).
-    - Calculated opening balance prior to the start date.
-    - Chronological table of credit and payment ledger entries with transaction references and running balances.
-    - Total Udhaar given, Total Payments received, and Closing Outstanding Balance.
-    - Dual signature lines (Customer Acknowledgment and Authorized Shop Signatory).
-- **Official Payment Receipt PDF** (`/transactions/{transaction}/receipt/pdf`):
-  - Formatted payment voucher / Jama Parchi containing:
-    - Receipt reference number (`TXN-YYYYMM-XXXXX`) and date.
-    - Customer name and mobile number.
-    - Payment Mode (Cash, UPI, Bank Transfer, Cheque) and UPI reference number.
-    - Received amount in figures (`₹ xx,xxx.xx`).
-    - Amount in Indian currency words (`CurrencyHelper::toIndianWords()`, e.g. "Two Thousand Five Hundred Rupees Only").
-    - Updated account running balance after payment.
-    - Authorized operator name and stamp/signature box.
-- **WhatsApp Statement & Receipt Sharing**:
-  - `GET /customers/{customer}/whatsapp/statement`: Generates pre-filled ledger statement summary and opens WhatsApp Click-to-Chat.
-  - `GET /transactions/{transaction}/whatsapp/receipt`: Generates pre-filled payment confirmation message with receipt number and remaining balance, and opens WhatsApp Click-to-Chat.
-- **Strict Multi-Tenant Security & IDOR Isolation**:
-  - Cross-tenant statement and receipt access forbidden (HTTP 403/404).
-  - Cross-tenant reminder dispatch prevented.
+## Phase 7 Deliverables Summary
+- **SaaS Subscription Plans (`plans` table & `PlanSeeder`)**:
+  - **Free Plan**:
+    - ₹0 price, 365 days duration.
+    - Customer limit: 25 customers.
+    - Features: Basic Udhaar & Jama Ledger, Basic Reports.
+  - **Basic Plan**:
+    - ₹99/month (30 days duration).
+    - Customer limit: 200 customers.
+    - Features: Downloadable PDF Statements & Receipts, WhatsApp Click-to-Chat Reminders, Basic Reports.
+  - **Pro Plan** (Flagship):
+    - ₹199/month (30 days duration).
+    - Customer limit: Unlimited (-1, subject to fair-use policy).
+    - Features: PDF Statements, WhatsApp Reminders, CSV/Excel Exports, Advanced Reports, Priority Support.
+  - **30-Day Free Starter Trial**: Automatic assignment upon new shop registration with full features unlocked.
+- **Razorpay Payment Gateway Integration (`SubscriptionService`)**:
+  - **Order Creation API** (`POST /subscription/checkout/order`):
+    - Computes amount in paise (e.g. ₹99.00 -> 9900 paise).
+    - Records pending audit entry in `subscription_payments` with `gateway_order_id`.
+  - **Server-Side HMAC-SHA256 Signature Verification** (`POST /subscription/checkout/verify`):
+    - Validates signature: `hash_hmac('sha256', order_id + "|" + payment_id, secret)`.
+    - Never trusts browser redirects or client-side success flags.
+    - Updates payment record to `successful` and atomically activates/renews subscription.
+    - Rejects invalid or forged signatures with HTTP 422 and marks payment as `failed`.
+  - **Webhook Processing with Idempotency** (`POST /webhook/razorpay`):
+    - Verifies `X-Razorpay-Signature` with webhook secret.
+    - Idempotency protection prevents duplicate processing if webhooks are retried.
+    - Handles `payment.captured`, `order.paid`, and `payment.failed` events.
+    - CSRF-exempted in `bootstrap/app.php`.
+- **Quota & Feature Enforcement Middleware (`EnforceSubscriptionLimits`)**:
+  - **Customer Quotas**: Checks `canAddCustomer()` before saving customer records; throws validation error when plan limit is reached.
+  - **Feature Gates**: Blocks CSV exports on non-Pro plans (`403 Forbidden`) and PDF statements on Free plans (`403 Forbidden`).
+  - **Subscription Expiry & Grace Period**:
+    - Calculates days remaining; displays banner when <= 5 days remain.
+    - 3-day grace period allows shops temporary access before hard blocking.
+    - Hard expiration redirects shops to subscription page.
+- **Super Admin Plan Management (`Admin\PlanController`)**:
+  - Super admins can dynamically view, edit plan prices, durations, customer limits, and toggle feature permissions.
+- **Shop Owner Subscription Portal (`/subscription`)**:
+  - Current plan card with status badge, validity dates, days remaining counter, and live customer usage progress bar.
+  - Modern pricing table with feature checklists and instant Razorpay checkout integration.
+  - Complete billing and payment history table with order IDs, payment IDs, and status badges.
 - **Automated Verification**:
-  - `Phase6WhatsAppAndPdfTest` with 8 feature tests covering exact message text, click-to-chat URL building, modal submission & audit logging, AJAX handling, PDF statement download, PDF payment receipt with words, statement sharing, and multi-tenant isolation.
-  - Full suite status: 46 tests, 239 assertions, all passing.
+  - `Phase7SubscriptionManagementTest` with 9 feature test cases covering seeded plan pricing, UI view, Razorpay order generation, server-side HMAC verification, fraud rejection, webhook idempotency, customer limits, feature restriction gates, and super admin updates.
+  - Full suite status: 55 tests, 293 assertions, all passing (0 failures).

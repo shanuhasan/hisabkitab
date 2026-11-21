@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ReportService;
+use App\Services\SubscriptionService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -12,7 +13,10 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ReportController extends Controller
 {
-    public function __construct(protected ReportService $reportService) {}
+    public function __construct(
+        protected ReportService $reportService,
+        protected SubscriptionService $subscriptionService
+    ) {}
 
     /**
      * Show the main reports dashboard with tabbed and filtered reporting views.
@@ -90,6 +94,10 @@ class ReportController extends Controller
     public function exportCsv(Request $request): StreamedResponse
     {
         $tenant = auth()->user()->tenant;
+        if ($tenant && !$this->subscriptionService->canAccessFeature($tenant, 'csv_exports')) {
+            abort(403, 'CSV Exports are exclusively available on the Pro Plan. Please upgrade your subscription.');
+        }
+
         $tenantId = $tenant->id;
         $reportType = $request->input('report', 'period');
         $fromDate = $request->input('from_date');

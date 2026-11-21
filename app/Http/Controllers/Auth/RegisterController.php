@@ -65,14 +65,21 @@ class RegisterController extends Controller
                 'is_active' => true,
             ]);
 
-            // 3. Attach Starter Trial Subscription
-            $starterPlan = Plan::firstOrCreate(
-                ['name' => 'Free Starter Trial'],
+            // 3. Attach 30-Day Starter Trial Subscription
+            $starterPlan = Plan::where('slug', 'trial')->first() ?? Plan::firstOrCreate(
+                ['slug' => 'trial'],
                 [
+                    'name' => 'Free 30-Day Trial',
                     'price' => 0.00,
                     'duration_days' => 30,
                     'customer_limit' => 100,
-                    'features' => ['whatsapp_reminders' => true, 'pdf_reports' => true],
+                    'features' => [
+                        'pdf_statements' => true,
+                        'whatsapp_reminders' => true,
+                        'csv_exports' => true,
+                        'advanced_reports' => true,
+                    ],
+                    'description' => 'Full-featured 30-day free trial for new shopkeepers.',
                     'is_active' => true,
                 ]
             );
@@ -82,7 +89,8 @@ class RegisterController extends Controller
                 'plan_id' => $starterPlan->id,
                 'starts_at' => now()->toDateString(),
                 'ends_at' => now()->addDays(30)->toDateString(),
-                'status' => 'active',
+                'trial_ends_at' => now()->addDays(30)->toDateString(),
+                'status' => 'trial',
                 'payment_details' => ['type' => 'free_trial_activation'],
             ]);
 
