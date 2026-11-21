@@ -1,0 +1,208 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+/* HisabKitab Design System - Modern Indian SaaS */
+:root {
+    --hk-primary: #1e40af;       /* Deep Trust Blue */
+    --hk-primary-light: #3b82f6;
+    --hk-primary-dark: #1e3a8a;
+    --hk-success: #15803d;       /* Jama / Received (Forest Green) */
+    --hk-success-bg: #dcfce7;
+    --hk-danger: #b91c1c;        /* Udhaar / Given (Crimson Red) */
+    --hk-danger-bg: #fee2e2;
+    --hk-warning: #b45309;       /* Pending / Alert */
+    --hk-warning-bg: #fef3c7;
+    --hk-sidebar-bg: #0f172a;    /* Midnight Slate */
+    --hk-sidebar-hover: #1e293b;
+    --hk-sidebar-text: #94a3b8;
+    --hk-sidebar-active: #2563eb;
+    --hk-card-border: #e2e8f0;
+}
+
+body {
+    background-color: #f8fafc;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #0f172a;
+    min-height: 100vh;
+}
+
+/* Badge and Transaction formatting */
+.amount-credit {
+    color: var(--hk-danger);
+    font-weight: 700;
+}
+
+.amount-payment {
+    color: var(--hk-success);
+    font-weight: 700;
+}
+
+.badge-credit {
+    background-color: var(--hk-danger-bg);
+    color: var(--hk-danger);
+    font-weight: 600;
+    border: 1px solid #fecaca;
+}
+
+.badge-payment {
+    background-color: var(--hk-success-bg);
+    color: var(--hk-success);
+    font-weight: 600;
+    border: 1px solid #bbf7d0;
+}
+
+/* Authenticated Layout Styles */
+.hk-wrapper {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.hk-sidebar {
+    width: 270px;
+    background-color: var(--hk-sidebar-bg);
+    color: var(--hk-sidebar-text);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease-in-out;
+    z-index: 1050;
+}
+
+.hk-sidebar-brand {
+    padding: 1.25rem 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hk-sidebar-brand i {
+    color: #38bdf8;
+    margin-right: 0.65rem;
+    font-size: 1.4rem;
+}
+
+.hk-sidebar-menu {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+}
+
+.hk-sidebar-heading {
+    padding: 0.75rem 1.5rem 0.25rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.hk-sidebar .nav-link {
+    color: var(--hk-sidebar-text);
+    padding: 0.7rem 1.25rem;
+    margin: 0.15rem 0.85rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 0.925rem;
+    transition: all 0.15s ease-in-out;
+}
+
+.hk-sidebar .nav-link:hover {
+    color: #ffffff;
+    background-color: var(--hk-sidebar-hover);
+}
+
+.hk-sidebar .nav-link.active {
+    color: #ffffff;
+    background-color: var(--hk-sidebar-active);
+}
+
+.hk-sidebar .nav-link i {
+    font-size: 1.15rem;
+    margin-right: 0.8rem;
+    width: 1.3rem;
+    text-align: center;
+}
+
+.hk-sidebar-footer {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.hk-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background-color: #f8fafc;
+}
+
+.hk-navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--hk-card-border);
+    padding: 0.75rem 1.5rem;
+}
+
+.hk-main {
+    flex-grow: 1;
+    padding: 1.5rem;
+}
+
+.hk-footer {
+    background-color: #ffffff;
+    border-top: 1px solid var(--hk-card-border);
+    padding: 1rem 1.5rem;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+/* Card & UI Elevators */
+.card-hk {
+    border: 1px solid var(--hk-card-border);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+}
+
+.card-hk .card-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--hk-card-border);
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 991.98px) {
+    .hk-sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        transform: translateX(-100%);
+    }
+
+    .hk-sidebar.show {
+        transform: translateX(0);
+    }
+
+    .hk-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(15, 23, 42, 0.6);
+        z-index: 1040;
+    }
+
+    .hk-backdrop.show {
+        display: block;
+    }
+}
