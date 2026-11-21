@@ -6,8 +6,11 @@
 
 @section('header-actions')
 <div class="d-flex gap-2">
-    <a href="{{ url('/customers') }}" class="btn btn-outline-primary btn-sm fw-semibold">
+    <a href="{{ route('customers.index') }}" class="btn btn-outline-primary btn-sm fw-semibold">
         <i class="bi bi-people me-1"></i> View Customers
+    </a>
+    <a href="{{ route('customers.create') }}" class="btn btn-primary btn-sm fw-semibold">
+        <i class="bi bi-person-plus me-1"></i> Add Customer
     </a>
 </div>
 @endsection
@@ -100,7 +103,7 @@
                 </a>
             </div>
             <div class="col-md-4">
-                <a href="{{ url('/customers/create') }}" class="btn btn-outline-primary w-100 py-3 d-flex align-items-center justify-content-center gap-2 fw-semibold">
+                <a href="{{ route('customers.create') }}" class="btn btn-outline-primary w-100 py-3 d-flex align-items-center justify-content-center gap-2 fw-semibold">
                     <i class="bi bi-person-plus fs-4"></i>
                     <span>Add New Customer (Grahak)</span>
                 </a>

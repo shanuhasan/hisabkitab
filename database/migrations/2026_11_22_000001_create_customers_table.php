@@ -23,9 +23,10 @@ return new class extends Migration
             $table->enum('status', ['active', 'inactive', 'blocked'])->default('active');
             $table->text('notes')->nullable();
             $table->timestamp('last_transaction_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
-            $table->index(['tenant_id', 'phone']);
+            $table->unique(['tenant_id', 'phone']);
             $table->index(['tenant_id', 'name']);
             $table->index(['tenant_id', 'current_balance']);
             $table->index(['tenant_id', 'status']);

@@ -34,7 +34,7 @@
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                        <a class="dropdown-item py-2" href="{{ url('/customers/create') }}">
+                        <a class="dropdown-item py-2" href="{{ route('customers.create') }}">
                             <i class="bi bi-person-plus-fill me-2 text-primary"></i> Add New Customer
                         </a>
                     </li>
