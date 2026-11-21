@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CurrencyHelper;
 use App\Http\Requests\ReverseTransactionRequest;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Models\Customer;
 use App\Models\Transaction;
 use App\Services\TransactionService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class TransactionController extends Controller
@@ -184,6 +187,35 @@ class TransactionController extends Controller
         $tenant = auth()->user()->tenant;
 
         return view('transactions.ledger-print', compact('customer', 'transactions', 'tenant', 'fromDate', 'toDate'));
+    }
+
+    /**
+     * Generate official Payment Receipt PDF for a transaction.
+     */
+    public function receiptPdf(Transaction $transaction): Response
+    {
+        if ($transaction->tenant_id !== auth()->user()->tenant_id) {
+            abort(403, 'Unauthorized access to transaction receipt.');
+        }
+
+        $transaction->load(['customer', 'user']);
+        $tenant = auth()->user()->tenant;
+        $amountInWords = CurrencyHelper::toIndianWords($transaction->amount);
+
+        $pdf = Pdf::loadView('transactions.receipt-pdf', [
+            'transaction' => $transaction,
+            'customer' => $transaction->customer,
+            'tenant' => $tenant,
+            'amountInWords' => $amountInWords,
+        ]);
+
+        $fileName = sprintf(
+            'Receipt-%s-%s.pdf',
+            $transaction->transaction_number,
+            date('Ymd')
+        );
+
+        return $pdf->download($fileName);
     }
 }
 

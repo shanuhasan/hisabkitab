@@ -2,32 +2,38 @@
 
 All notable changes to the HisabKitab SaaS project will be documented in this file.
 
+## [Phase 6] - 2026-11-22
+### Added
+- Created `WhatsappService` (`app/Services/WhatsappService.php`) providing:
+  - Phone number normalization and country code validation (`cleanPhoneNumber()`).
+  - Pre-filled reminder message generators for multiple languages (Standard Hinglish, Pure Hindi, Polite English, Formal English).
+  - WhatsApp Click-to-Chat URL builder (`buildClickToChatUrl()`).
+  - Reminder audit logging (`logReminder()`) with status tracking (`initiated`, `prepared`, etc.).
+  - Statement summary share message builder (`generateStatementShareMessage()`).
+  - Payment receipt share message builder (`generateReceiptShareMessage()`).
+- Created `CurrencyHelper` (`app/Helpers/CurrencyHelper.php`) to convert monetary amounts to Indian currency words (Lakhs, Crores, Rupees, and Paise).
+- Created `WhatsappController` (`app/Http/Controllers/WhatsappController.php`) with:
+  - `sendReminder`: Handles reminder dispatch, message editing, database audit logging, and redirect to WhatsApp `wa.me` (or JSON response for AJAX).
+  - `shareStatement`: Shares account statement summary via WhatsApp.
+  - `shareReceipt`: Shares payment receipt confirmation via WhatsApp.
+- Added database migration `2026_11_22_000006_update_whatsapp_logs_table.php` updating `whatsapp_logs` table (`status` as varchar, added `template_type` and `sent_by_user_id`).
+- Built customer account statement PDF generator (`CustomerController@statementPdf` and `resources/views/customers/statement-pdf.blade.php`) featuring shop details, customer info, statement period, calculated opening balance, transaction ledger, and closing balance.
+- Built payment receipt PDF generator (`TransactionController@receiptPdf` and `resources/views/transactions/receipt-pdf.blade.php`) featuring official payment voucher, receipt number, date, amount in figures & words, mode, and remaining balance.
+- Updated `resources/views/customers/show.blade.php`:
+  - Added interactive **WhatsApp Reminder Modal** with template switcher, live message preview, and pre-send editing.
+  - Added WhatsApp Communication History table displaying previous reminders and delivery statuses.
+  - Added PDF Statement download and WhatsApp share buttons.
+- Updated `resources/views/transactions/show.blade.php` and `resources/views/transactions/ledger-print.blade.php` with PDF download and WhatsApp sharing triggers.
+- Registered new routes in `routes/web.php` for statements, receipts, and WhatsApp actions.
+- Implemented and passed automated test suite in `tests/Feature/Phase6WhatsAppAndPdfTest.php` (8 tests, 37 assertions). Full test suite now passes 46 tests, 239 assertions (0 failures).
+
 ## [Phase 5] - 2026-11-22
 ### Added
-- Created `ReportService` (`app/Services/ReportService.php`) providing:
-  - `getDashboardData`: Real-time shop KPIs, 14-day daily collection trends, 6-month credit vs. payment comparisons, and top default debtor rankings.
-  - `getPeriodReport`: Daily, Weekly, Monthly, and Custom date-range ledger calculations.
-  - `getOutstandingCustomers`: Ranked listing of customers with due balances.
-  - `getCustomerWiseSummary`: Comprehensive customer financial breakdown (Total Udhaar, Total Jama, Net Balance).
-  - `getCollectionReport`: Receipts analysis grouped by payment modes (Cash, UPI, Bank Transfer, Cheque).
-- Updated `DashboardController` (`app/Http/Controllers/DashboardController.php`) with financial KPIs and Chart.js datasets.
-- Created `ReportController` (`app/Http/Controllers/ReportController.php`) supporting tabbed views, date filtering, PDF export, and streamed CSV export.
-- Created reporting routes in `routes/web.php` (`/reports`, `/reports/export/pdf`, `/reports/export/csv`).
-- Updated `resources/views/dashboard.blade.php`:
-  - 6 KPI metric summary cards with bilingual labels (Udhaar, Jama, Baki, Advance, Today).
-  - 2 Chart.js visual charts (14-Day Daily Collection Line Chart, 6-Month Udhaar vs Payment Comparison Bar Chart).
-  - Real-time Recent Transactions table with running balances.
-  - Highest Outstanding Customers list with instant WhatsApp Remind buttons (`wa.me`).
-  - Recent Payments receipts section.
-- Built interactive reporting center `resources/views/reports/index.blade.php`:
-  - Tabbed interface (Period / Date-range Report, Customer-wise Summary, Outstanding Baki List, Collection Report).
-  - Date range filters with quick presets (Today, Yesterday, Last 7 Days, This Month, Last Month).
-  - Export PDF and Export CSV buttons.
-  - Browser print stylesheet.
-- Built DomPDF report template `resources/views/reports/pdf.blade.php`:
-  - Clean printable layout with shop branding, contact info, date range, summary KPI boxes, and detailed tabular data.
-- Streamed CSV export with UTF-8 BOM encoding for direct compatibility with Microsoft Excel and Google Sheets.
-- Implemented and passed automated test suite in `tests/Feature/Phase5DashboardAndReportingTest.php` (9 tests, 44 assertions). Full test suite now passes 38 tests, 202 assertions.
+- Created `ReportService` (`app/Services/ReportService.php`) providing dashboard metrics, period reports, customer summaries, and collection reports.
+- Updated `DashboardController` and `ReportController` supporting tabbed views, date filtering, PDF export, and streamed CSV export.
+- Redesigned `resources/views/dashboard.blade.php` with 6 metric cards, 2 Chart.js analytics charts, recent transactions, and top debtor accounts.
+- Built DomPDF report template `resources/views/reports/pdf.blade.php`.
+- Implemented and passed automated test suite in `tests/Feature/Phase5DashboardAndReportingTest.php` (9 tests, 44 assertions).
 
 ## [Phase 4] - 2026-11-22
 ### Added
@@ -37,24 +43,15 @@ All notable changes to the HisabKitab SaaS project will be documented in this fi
 - Implemented Jama Lena (payment entry) module (`/transactions/payment`) with Cash, UPI, Bank Transfer, Cheque modes and balance validation.
 - Added payment validation against customer outstanding balance with advance option and partial payment support.
 - Built immutable audit trail with reversal transactions (`type: reversal`) and audit logs in `transaction_reversals`.
-- Built Global Shop Len-Den Register (`/transactions/history`) with customer search, date range filtering, type filtering, payment mode filtering, and totals.
-- Created individual transaction details view (`/transactions/{transaction}`) with receipt photo preview and reversal info.
-- Built dedicated printable Customer Account Statement view (`/customers/{customer}/ledger`) with signature lines and print CSS.
-- Built Blade views:
-  - `resources/views/transactions/credit.blade.php`
-  - `resources/views/transactions/payment.blade.php`
-  - `resources/views/transactions/history.blade.php`
-  - `resources/views/transactions/show.blade.php`
-  - `resources/views/transactions/ledger-print.blade.php`
-- Implemented and passed automated test suite in `tests/Feature/Phase4FinancialLedgerAndTransactionsTest.php` (9 tests, 40 assertions).
+- Built Global Shop Len-Den Register (`/transactions/history`).
+- Built dedicated printable Customer Account Statement view (`/customers/{customer}/ledger`).
 
 ## [Phase 3] - 2026-11-22
 ### Added
 - Created complete Customer Management module (`CustomerController`, `StoreCustomerRequest`, `UpdateCustomerRequest`).
-- Implemented opening balance feature: creates an audited ledger entry in `transactions` with type `credit` or `payment`.
+- Implemented opening balance feature with audited ledger entries.
 - Enforced per-tenant phone uniqueness on customers (`tenant_id + phone`).
 - Added Customer listing with real-time search by name/mobile, balance filters, status toggle, and sorting.
-- Added Customer details page, edit form, archive and restore functionality.
 
 ## [Phase 2] - 2026-11-22
 ### Added

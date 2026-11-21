@@ -8,45 +8,57 @@
 | **Phase 3** | Customer Management Module (Search, CRUD, Credit Limits) | **Completed** | 2026-11-22 |
 | **Phase 4** | Core Financial Engine (Udhaar Dena / Jama Lena & Reversals) | **Completed** | 2026-11-22 |
 | **Phase 5** | Shop Dashboard, Chart.js Analytics & Comprehensive Reporting (PDF/CSV) | **Completed** | 2026-11-22 |
-| **Phase 6** | Automated WhatsApp Reminder Engine & PDF Statement System | Pending | - |
+| **Phase 6** | WhatsApp Click-to-Chat Reminders, PDF Statements & Payment Receipts | **Completed** | 2026-11-22 |
 | **Phase 7** | Subscription & Plan Management (Trial, Razorpay/Stripe, Quotas) | Pending | - |
 | **Phase 8** | Super Admin Management Portal & Tenant Control Panel | Pending | - |
 | **Phase 9** | Security Hardening, Audit Logs & Production Deployment Optimization | Pending | - |
 
 ---
 
-## Phase 5 Deliverables Summary
-- **Shop Owner Dashboard**:
-  - Real-time KPI Metric Cards:
-    - Total Active Customers
-    - Total Udhaar Given (Cumulative credit amount across active transactions)
-    - Total Payments Received (Cumulative collections received)
-    - Total Outstanding Balance (Net market credit receivable)
-    - Total Advance Balance (Deposits/advance held)
-    - Today's Udhaar (Credit issued today)
-    - Today's Collection (Payment collected today)
-  - Interactive Visual Analytics powered by Chart.js:
-    - **Daily Collection Trend**: 14-day line chart tracking daily cash/UPI inflows.
-    - **Monthly Udhaar vs Payment**: 6-month comparative bar chart showing credit growth versus recovery rate.
-  - Operational Quick Sections:
-    - **Recent Transactions Table**: Real-time audit stream of latest 8 credit, payment, and reversal transactions with customer links and running balance indicators.
-    - **Highest Outstanding Customers**: Top 5 borrower list sorted by highest due amount, complete with phone numbers, balance, and 1-click WhatsApp Remind buttons (`wa.me`).
-    - **Recent Payments List**: Latest 5 payment receipts showing customer, payment mode badge (Cash/UPI/Bank), date, and amount.
-- **Reporting Service & Engine (`ReportService`)**:
-  - `getDashboardData`: Optimized aggregation queries excluding reversed transactions and zero-impact entries.
-  - `getPeriodReport`: Dynamic date range engine for Daily, Weekly, Monthly, and Custom Range periods with net balance change and payment mode breakdown.
-  - `getOutstandingCustomers`: Ranked list of all debtor accounts with positive balance.
-  - `getCustomerWiseSummary`: Account-by-account breakdown showing Total Udhaar, Total Jama, Net Balance, and Last Activity date.
-  - `getCollectionReport`: Detailed receipts journal with payment method classification (Cash, UPI, Bank Transfer, Cheque).
-- **Export & Print Capabilities**:
-  - **DomPDF PDF Export** (`/reports/export/pdf`): High-quality, printable PDF statements formatted with shop branding, owner contact details, period parameters, and summary KPI boxes.
-  - **CSV / Excel Streamed Export** (`/reports/export/csv`): Memory-efficient streamed CSV export with UTF-8 BOM encoding for seamless opening in Microsoft Excel and Google Sheets without font corruption.
-  - **Print Report**: In-browser print view with dedicated print CSS media queries.
-- **Strict Multi-Tenancy & Performance Optimization**:
-  - Every reporting query enforces server-side `tenant_id` scoping.
-  - Multi-tenant isolation verified: zero leakage of statistical totals or customer details across shops.
-  - All financial aggregations exclude reversed entries (`is_reversed = false`).
-  - Eager loading on relational models (`customer`, `user`) prevents N+1 query bottlenecks.
+## Phase 6 Deliverables Summary
+- **WhatsApp Reminder Engine (`WhatsappService` & `WhatsappController`)**:
+  - Pre-composed WhatsApp reminder generator supporting multi-language templates:
+    - **Standard Hinglish (Default)**:
+      `"Namaste [Customer Name],\n\nAapke account mein ₹[Outstanding Amount] ka payment pending hai.\n\nKripya apni suvidha ke anusar payment kar dein.\n\nThank you,\n[Shop Name]"`
+    - **Pure Hindi (हिंदी)**:
+      `"नमस्ते [Customer Name],\n\nआपके खाते में ₹[Outstanding Amount] का भुगतान बाकी है।\n\nकृपया अपनी सुविधानुसार भुगतान करें।\n\nधन्यवाद,\n[Shop Name]"`
+    - **Polite English**:
+      `"Dear [Customer Name],\n\nA payment of ₹[Outstanding Amount] is pending in your account at [Shop Name]..."`
+    - **Formal English (Business)**:
+      `"Dear [Customer Name],\n\nThis is a friendly payment reminder from [Shop Name]..."`
+  - Interactive **WhatsApp Reminder Modal** on customer details:
+    - Automatically cleans phone numbers and injects Indian country code `+91`.
+    - Live template switcher with instant message preview.
+    - Editable message `<textarea>` allowing shopkeeper customization before dispatch.
+    - Direct submission to `POST /customers/{customer}/whatsapp/remind`.
+  - **Audit Logging & Reminder History**:
+    - Every reminder records an entry in `whatsapp_logs` with status `'initiated'`, phone, exact message sent, template type, and operator ID (`sent_by_user_id`).
+    - Dedicated "WhatsApp Communication History" table on customer details displaying past reminders with status badges.
+    - Architectural readiness: decoupled `WhatsappService` ready for future WhatsApp Cloud API webhook callbacks.
+- **Customer PDF Statement Generation** (`/customers/{customer}/statement/pdf`):
+  - DomPDF-optimized statement document displaying:
+    - Shop branding, address, owner contact phone, and email.
+    - Customer name, mobile number, and address.
+    - Statement period (`from_date` to `to_date`, or All-Time).
+    - Calculated opening balance prior to the start date.
+    - Chronological table of credit and payment ledger entries with transaction references and running balances.
+    - Total Udhaar given, Total Payments received, and Closing Outstanding Balance.
+    - Dual signature lines (Customer Acknowledgment and Authorized Shop Signatory).
+- **Official Payment Receipt PDF** (`/transactions/{transaction}/receipt/pdf`):
+  - Formatted payment voucher / Jama Parchi containing:
+    - Receipt reference number (`TXN-YYYYMM-XXXXX`) and date.
+    - Customer name and mobile number.
+    - Payment Mode (Cash, UPI, Bank Transfer, Cheque) and UPI reference number.
+    - Received amount in figures (`₹ xx,xxx.xx`).
+    - Amount in Indian currency words (`CurrencyHelper::toIndianWords()`, e.g. "Two Thousand Five Hundred Rupees Only").
+    - Updated account running balance after payment.
+    - Authorized operator name and stamp/signature box.
+- **WhatsApp Statement & Receipt Sharing**:
+  - `GET /customers/{customer}/whatsapp/statement`: Generates pre-filled ledger statement summary and opens WhatsApp Click-to-Chat.
+  - `GET /transactions/{transaction}/whatsapp/receipt`: Generates pre-filled payment confirmation message with receipt number and remaining balance, and opens WhatsApp Click-to-Chat.
+- **Strict Multi-Tenant Security & IDOR Isolation**:
+  - Cross-tenant statement and receipt access forbidden (HTTP 403/404).
+  - Cross-tenant reminder dispatch prevented.
 - **Automated Verification**:
-  - `Phase5DashboardAndReportingTest` with 9 feature test cases covering metrics calculation, exclusion of reversals, recent transactions, period reports, outstanding lists, collections by mode, PDF download, CSV streaming, and cross-tenant isolation.
-  - Full suite status: 38 tests, 202 assertions, all passing (0 failures).
+  - `Phase6WhatsAppAndPdfTest` with 8 feature tests covering exact message text, click-to-chat URL building, modal submission & audit logging, AJAX handling, PDF statement download, PDF payment receipt with words, statement sharing, and multi-tenant isolation.
+  - Full suite status: 46 tests, 239 assertions, all passing.

@@ -18,7 +18,9 @@ class WhatsappLog extends Model
         'customer_id',
         'phone',
         'message',
+        'template_type',
         'status',
+        'sent_by_user_id',
         'created_at',
     ];
 
@@ -33,5 +35,9 @@ class WhatsappLog extends Model
     {
         return $this->belongsTo(Customer::class);
     }
-}
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'sent_by_user_id');
+    }
+}

@@ -5,10 +5,18 @@
 @section('subheader', 'Recorded on ' . $transaction->transaction_date->format('d M Y'))
 
 @section('header-actions')
-<div class="d-flex gap-2">
+<div class="d-flex flex-wrap gap-2">
+    @if ($transaction->type === 'payment')
+        <a href="{{ route('transactions.receipt.pdf', $transaction) }}" class="btn btn-outline-danger btn-sm fw-semibold" title="Download PDF Receipt">
+            <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF Receipt
+        </a>
+        <a href="{{ route('transactions.whatsapp.receipt', $transaction) }}" target="_blank" class="btn btn-success btn-sm fw-semibold" title="Share Receipt on WhatsApp">
+            <i class="bi bi-whatsapp me-1"></i> Share via WhatsApp
+        </a>
+    @endif
     @if ($transaction->customer)
         <a href="{{ route('customers.show', $transaction->customer) }}" class="btn btn-outline-primary btn-sm fw-semibold">
-            <i class="bi bi-person me-1"></i> View Customer Ledger
+            <i class="bi bi-person me-1"></i> Customer Ledger
         </a>
     @endif
     <a href="{{ route('transactions.history') }}" class="btn btn-outline-secondary btn-sm">

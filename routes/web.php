@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ShopProfileController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\WhatsappController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,6 +53,9 @@ Route::middleware(['auth', 'tenant.active'])->group(function () {
     Route::delete('/customers/{customer}/archive', [CustomerController::class, 'archive'])->name('customers.archive');
     Route::post('/customers/{id}/restore', [CustomerController::class, 'restore'])->name('customers.restore');
     Route::get('/customers/{customer}/ledger', [TransactionController::class, 'customerLedger'])->name('customers.ledger');
+    Route::get('/customers/{customer}/statement/pdf', [CustomerController::class, 'statementPdf'])->name('customers.statement.pdf');
+    Route::post('/customers/{customer}/whatsapp/remind', [WhatsappController::class, 'sendReminder'])->name('customers.whatsapp.remind');
+    Route::get('/customers/{customer}/whatsapp/statement', [WhatsappController::class, 'shareStatement'])->name('customers.whatsapp.statement');
 
     // Financial Engine & Transaction Routes
     Route::get('/transactions/credit', [TransactionController::class, 'creditForm'])->name('transactions.credit');
@@ -60,6 +64,8 @@ Route::middleware(['auth', 'tenant.active'])->group(function () {
     Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
     Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
     Route::post('/transactions/{transaction}/reverse', [TransactionController::class, 'reverse'])->name('transactions.reverse');
+    Route::get('/transactions/{transaction}/receipt/pdf', [TransactionController::class, 'receiptPdf'])->name('transactions.receipt.pdf');
+    Route::get('/transactions/{transaction}/whatsapp/receipt', [WhatsappController::class, 'shareReceipt'])->name('transactions.whatsapp.receipt');
 
     // Reports & Analytics Routes
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');

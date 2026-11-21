@@ -35,8 +35,14 @@
 <body>
     <!-- Top Action Bar (No Print) -->
     <div class="container text-center py-3 no-print">
-        <button onclick="window.print()" class="btn btn-primary btn-sm px-4 fw-semibold me-2 shadow-sm">
-            <i class="bi bi-printer me-1"></i> Print Statement
+        <a href="{{ route('customers.statement.pdf', ['customer' => $customer->id, 'from_date' => $fromDate, 'to_date' => $toDate]) }}" class="btn btn-danger btn-sm px-3 fw-semibold me-2 shadow-sm">
+            <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF
+        </a>
+        <a href="{{ route('customers.whatsapp.statement', ['customer' => $customer->id, 'from_date' => $fromDate, 'to_date' => $toDate]) }}" target="_blank" class="btn btn-success btn-sm px-3 fw-semibold me-2 shadow-sm">
+            <i class="bi bi-whatsapp me-1"></i> Share via WhatsApp
+        </a>
+        <button onclick="window.print()" class="btn btn-primary btn-sm px-3 fw-semibold me-2 shadow-sm">
+            <i class="bi bi-printer me-1"></i> Print
         </button>
         <a href="{{ route('customers.show', $customer) }}" class="btn btn-outline-secondary btn-sm">
             &larr; Back to Customer

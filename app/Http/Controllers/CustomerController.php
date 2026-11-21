@@ -8,8 +8,10 @@ use App\Models\Customer;
 use App\Models\Transaction;
 use App\Services\TransactionService;
 use App\Services\WhatsappService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -165,11 +167,13 @@ class CustomerController extends Controller
 
         $tenant = auth()->user()->tenant;
         $whatsappUrl = $this->whatsappService->generateReminderUrl($customer, $tenant);
+        $whatsappTemplates = $this->whatsappService->getReminderTemplates($customer, $tenant);
+        $whatsappLogs = $customer->whatsappLogs()->take(10)->get();
 
         // Load customer transactions
         $transactions = $customer->transactions()->paginate(20);
 
-        return view('customers.show', compact('customer', 'tenant', 'whatsappUrl', 'transactions'));
+        return view('customers.show', compact('customer', 'tenant', 'whatsappUrl', 'whatsappTemplates', 'whatsappLogs', 'transactions'));
     }
 
     /**
@@ -240,6 +244,71 @@ class CustomerController extends Controller
 
         return redirect()->route('customers.show', $customer)
             ->with('success', "Customer '{$customer->name}' has been restored successfully.");
+    }
+
+    /**
+     * Generate and download professional Customer Account Statement PDF.
+     */
+    public function statementPdf(Request $request, Customer $customer): Response
+    {
+        if ($customer->tenant_id !== auth()->user()->tenant_id) {
+            abort(403, 'Unauthorized access to customer statement.');
+        }
+
+        $tenant = auth()->user()->tenant;
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
+
+        // Calculate opening balance prior to fromDate
+        $openingBalance = '0.00';
+        if (!empty($fromDate)) {
+            $prevTxn = $customer->transactions()
+                ->whereDate('transaction_date', '<', $fromDate)
+                ->orderBy('transaction_date', 'desc')
+                ->orderBy('id', 'desc')
+                ->first();
+            if ($prevTxn) {
+                $openingBalance = (string) $prevTxn->running_balance;
+            }
+        }
+
+        // Ledger entries within the date period
+        $query = $customer->transactions();
+        if (!empty($fromDate)) {
+            $query->whereDate('transaction_date', '>=', $fromDate);
+        }
+        if (!empty($toDate)) {
+            $query->whereDate('transaction_date', '<=', $toDate);
+        }
+
+        $transactions = $query->orderBy('transaction_date', 'asc')->orderBy('id', 'asc')->get();
+
+        $totalCredit = $transactions->where('type', 'credit')->where('is_reversed', false)->sum('amount');
+        $totalPayment = $transactions->where('type', 'payment')->where('is_reversed', false)->sum('amount');
+
+        $closingBalance = $transactions->isNotEmpty()
+            ? (string) $transactions->last()->running_balance
+            : $openingBalance;
+
+        $pdf = Pdf::loadView('customers.statement-pdf', [
+            'customer' => $customer,
+            'tenant' => $tenant,
+            'fromDate' => $fromDate,
+            'toDate' => $toDate,
+            'openingBalance' => $openingBalance,
+            'transactions' => $transactions,
+            'totalCredit' => number_format((float) $totalCredit, 2, '.', ''),
+            'totalPayment' => number_format((float) $totalPayment, 2, '.', ''),
+            'closingBalance' => number_format((float) $closingBalance, 2, '.', ''),
+        ]);
+
+        $fileName = sprintf(
+            'Statement-%s-%s.pdf',
+            preg_replace('/[^A-Za-z0-9]/', '', $customer->name),
+            date('Ymd')
+        );
+
+        return $pdf->download($fileName);
     }
 }
 

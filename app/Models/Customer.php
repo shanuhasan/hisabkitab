@@ -39,6 +39,11 @@ class Customer extends Model
         return $this->hasMany(Transaction::class)->orderBy('transaction_date', 'desc')->orderBy('id', 'desc');
     }
 
+    public function whatsappLogs(): HasMany
+    {
+        return $this->hasMany(WhatsappLog::class)->orderBy('created_at', 'desc');
+    }
+
     /**
      * Compute total credit given (Udhaar) from ledger entries.
      */
