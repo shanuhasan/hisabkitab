@@ -2,6 +2,33 @@
 
 All notable changes to the HisabKitab SaaS project will be documented in this file.
 
+## [Phase 5] - 2026-11-22
+### Added
+- Created `ReportService` (`app/Services/ReportService.php`) providing:
+  - `getDashboardData`: Real-time shop KPIs, 14-day daily collection trends, 6-month credit vs. payment comparisons, and top default debtor rankings.
+  - `getPeriodReport`: Daily, Weekly, Monthly, and Custom date-range ledger calculations.
+  - `getOutstandingCustomers`: Ranked listing of customers with due balances.
+  - `getCustomerWiseSummary`: Comprehensive customer financial breakdown (Total Udhaar, Total Jama, Net Balance).
+  - `getCollectionReport`: Receipts analysis grouped by payment modes (Cash, UPI, Bank Transfer, Cheque).
+- Updated `DashboardController` (`app/Http/Controllers/DashboardController.php`) with financial KPIs and Chart.js datasets.
+- Created `ReportController` (`app/Http/Controllers/ReportController.php`) supporting tabbed views, date filtering, PDF export, and streamed CSV export.
+- Created reporting routes in `routes/web.php` (`/reports`, `/reports/export/pdf`, `/reports/export/csv`).
+- Updated `resources/views/dashboard.blade.php`:
+  - 6 KPI metric summary cards with bilingual labels (Udhaar, Jama, Baki, Advance, Today).
+  - 2 Chart.js visual charts (14-Day Daily Collection Line Chart, 6-Month Udhaar vs Payment Comparison Bar Chart).
+  - Real-time Recent Transactions table with running balances.
+  - Highest Outstanding Customers list with instant WhatsApp Remind buttons (`wa.me`).
+  - Recent Payments receipts section.
+- Built interactive reporting center `resources/views/reports/index.blade.php`:
+  - Tabbed interface (Period / Date-range Report, Customer-wise Summary, Outstanding Baki List, Collection Report).
+  - Date range filters with quick presets (Today, Yesterday, Last 7 Days, This Month, Last Month).
+  - Export PDF and Export CSV buttons.
+  - Browser print stylesheet.
+- Built DomPDF report template `resources/views/reports/pdf.blade.php`:
+  - Clean printable layout with shop branding, contact info, date range, summary KPI boxes, and detailed tabular data.
+- Streamed CSV export with UTF-8 BOM encoding for direct compatibility with Microsoft Excel and Google Sheets.
+- Implemented and passed automated test suite in `tests/Feature/Phase5DashboardAndReportingTest.php` (9 tests, 44 assertions). Full test suite now passes 38 tests, 202 assertions.
+
 ## [Phase 4] - 2026-11-22
 ### Added
 - Implemented core financial engine (`TransactionService`) using atomic DB transactions and pessimistic row locking (`lockForUpdate()`).

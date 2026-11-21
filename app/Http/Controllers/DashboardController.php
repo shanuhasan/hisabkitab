@@ -10,24 +10,32 @@ class DashboardController extends Controller
     public function __construct(protected ReportService $reportService) {}
 
     /**
-     * Show main dashboard overview.
+     * Show main shop dashboard with real-time statistics, charts, and recent activity.
      */
     public function index(): View
     {
         $user = auth()->user();
         $tenant = $user->tenant;
 
-        $metrics = $tenant
-            ? $this->reportService->getShopOverviewMetrics($tenant->id)
+        $dashboardData = $tenant
+            ? $this->reportService->getDashboardData($tenant->id)
             : [
-                'total_udhaar_receivable' => '0.00',
-                'total_advance_payable' => '0.00',
-                'total_customers' => 0,
-                'today_credit' => '0.00',
-                'today_payment' => '0.00',
+                'metrics' => [
+                    'total_customers' => 0,
+                    'total_udhaar_given' => '0.00',
+                    'total_payments_received' => '0.00',
+                    'total_outstanding_balance' => '0.00',
+                    'total_advance_balance' => '0.00',
+                    'today_udhaar' => '0.00',
+                    'today_collection' => '0.00',
+                ],
+                'recent_transactions' => collect(),
+                'highest_outstanding_customers' => collect(),
+                'recent_payments' => collect(),
+                'daily_chart' => ['labels' => [], 'data' => []],
+                'monthly_chart' => ['labels' => [], 'credit' => [], 'payment' => []],
             ];
 
-        return view('dashboard', compact('tenant', 'user', 'metrics'));
+        return view('dashboard', compact('tenant', 'user', 'dashboardData'));
     }
 }
-
