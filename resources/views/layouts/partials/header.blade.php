@@ -23,12 +23,12 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="quickActionDrop">
                     <li>
-                        <a class="dropdown-item py-2 text-danger fw-semibold" href="{{ url('/transactions/credit') }}">
+                        <a class="dropdown-item py-2 text-danger fw-semibold" href="{{ route('transactions.credit') }}">
                             <i class="bi bi-arrow-up-right-circle-fill me-2"></i> + Udhaar Dena (Gave Credit)
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item py-2 text-success fw-semibold" href="{{ url('/transactions/payment') }}">
+                        <a class="dropdown-item py-2 text-success fw-semibold" href="{{ route('transactions.payment') }}">
                             <i class="bi bi-arrow-down-left-circle-fill me-2"></i> + Jama Lena (Received Payment)
                         </a>
                     </li>

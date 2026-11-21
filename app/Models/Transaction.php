@@ -17,6 +17,7 @@ class Transaction extends Model
         'customer_id',
         'user_id',
         'transaction_number',
+        'reference_number',
         'type',
         'amount',
         'running_balance',

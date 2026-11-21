@@ -44,19 +44,19 @@
         <div class="hk-sidebar-heading">Transactions (Len-Den)</div>
         <ul class="nav flex-column mb-3">
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('transactions/credit*') ? 'active' : '' }}" href="{{ url('/transactions/credit') }}">
+                <a class="nav-link {{ request()->routeIs('transactions.credit*') ? 'active' : '' }}" href="{{ route('transactions.credit') }}">
                     <i class="bi bi-arrow-up-right-circle-fill text-danger"></i>
                     <span>Udhaar Dena (Gave)</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('transactions/payment*') ? 'active' : '' }}" href="{{ url('/transactions/payment') }}">
+                <a class="nav-link {{ request()->routeIs('transactions.payment*') ? 'active' : '' }}" href="{{ route('transactions.payment') }}">
                     <i class="bi bi-arrow-down-left-circle-fill text-success"></i>
                     <span>Jama Lena (Got)</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('transactions/history*') ? 'active' : '' }}" href="{{ url('/transactions/history') }}">
+                <a class="nav-link {{ request()->routeIs('transactions.history*') ? 'active' : '' }}" href="{{ route('transactions.history') }}">
                     <i class="bi bi-receipt"></i>
                     <span>Ledger History</span>
                 </a>

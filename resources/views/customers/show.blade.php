@@ -6,9 +6,22 @@
 
 @section('header-actions')
 <div class="d-flex flex-wrap gap-2">
+    <!-- Transaction Buttons -->
+    <a href="{{ route('transactions.credit', ['customer_id' => $customer->id]) }}" class="btn btn-danger fw-semibold shadow-sm">
+        <i class="bi bi-arrow-up-right-circle me-1"></i> + Udhaar Dena
+    </a>
+    <a href="{{ route('transactions.payment', ['customer_id' => $customer->id]) }}" class="btn btn-success fw-semibold shadow-sm">
+        <i class="bi bi-arrow-down-left-circle me-1"></i> + Jama Lena
+    </a>
+
+    <!-- Print Statement -->
+    <a href="{{ route('customers.ledger', $customer) }}" target="_blank" class="btn btn-outline-dark fw-semibold">
+        <i class="bi bi-printer me-1"></i> Statement
+    </a>
+
     <!-- WhatsApp Reminder -->
-    <a href="{{ $whatsappUrl }}" target="_blank" class="btn btn-success fw-semibold shadow-sm" title="Send WhatsApp Payment Reminder">
-        <i class="bi bi-whatsapp me-1"></i> WhatsApp Reminder
+    <a href="{{ $whatsappUrl }}" target="_blank" class="btn btn-outline-success fw-semibold" title="Send WhatsApp Payment Reminder">
+        <i class="bi bi-whatsapp me-1"></i> WhatsApp
     </a>
 
     <!-- Direct Phone Call -->

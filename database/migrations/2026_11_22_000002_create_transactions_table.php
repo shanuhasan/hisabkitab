@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained('customers')->onDelete('restrict');
             $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
             $table->string('transaction_number', 50);
+            $table->string('reference_number', 100)->nullable();
             $table->enum('type', ['credit', 'payment', 'reversal']);
             $table->decimal('amount', 15, 2);
             $table->decimal('running_balance', 15, 2);

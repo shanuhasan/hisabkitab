@@ -91,13 +91,13 @@
     <div class="card-body">
         <div class="row g-3">
             <div class="col-md-4">
-                <a href="{{ url('/transactions/credit') }}" class="btn btn-outline-danger w-100 py-3 d-flex align-items-center justify-content-center gap-2 fw-semibold">
+                <a href="{{ route('transactions.credit') }}" class="btn btn-outline-danger w-100 py-3 d-flex align-items-center justify-content-center gap-2 fw-semibold">
                     <i class="bi bi-arrow-up-right-circle fs-4"></i>
                     <span>+ Udhaar Dena (Gave Credit)</span>
                 </a>
             </div>
             <div class="col-md-4">
-                <a href="{{ url('/transactions/payment') }}" class="btn btn-outline-success w-100 py-3 d-flex align-items-center justify-content-center gap-2 fw-semibold">
+                <a href="{{ route('transactions.payment') }}" class="btn btn-outline-success w-100 py-3 d-flex align-items-center justify-content-center gap-2 fw-semibold">
                     <i class="bi bi-arrow-down-left-circle fs-4"></i>
                     <span>+ Jama Lena (Got Payment)</span>
                 </a>

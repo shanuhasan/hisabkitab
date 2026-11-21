@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ShopProfileController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,6 +50,15 @@ Route::middleware(['auth', 'tenant.active'])->group(function () {
     Route::put('/customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
     Route::delete('/customers/{customer}/archive', [CustomerController::class, 'archive'])->name('customers.archive');
     Route::post('/customers/{id}/restore', [CustomerController::class, 'restore'])->name('customers.restore');
+    Route::get('/customers/{customer}/ledger', [TransactionController::class, 'customerLedger'])->name('customers.ledger');
+
+    // Financial Engine & Transaction Routes
+    Route::get('/transactions/credit', [TransactionController::class, 'creditForm'])->name('transactions.credit');
+    Route::get('/transactions/payment', [TransactionController::class, 'paymentForm'])->name('transactions.payment');
+    Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
+    Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
+    Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
+    Route::post('/transactions/{transaction}/reverse', [TransactionController::class, 'reverse'])->name('transactions.reverse');
 
     // Shop Profile Management (Protected & Isolated)
     Route::get('/shop/profile', [ShopProfileController::class, 'edit'])->name('shop.profile');
