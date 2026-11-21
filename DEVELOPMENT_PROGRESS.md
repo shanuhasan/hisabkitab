@@ -4,7 +4,7 @@
 |---|---|---|---|
 | **Phase 0** | Project Inspection, System Architecture & Database Design | **Completed** | 2026-11-22 |
 | **Phase 1** | Project Initialization, Database Architecture & Base UI Layouts | **Completed** | 2026-11-22 |
-| **Phase 2** | Authentication, Multi-Tenant Registration & Shop Profile | Pending | - |
+| **Phase 2** | Authentication, Multi-Tenant Registration & Shop Profile | **Completed** | 2026-11-22 |
 | **Phase 3** | Customer Management Module (Search, CRUD, Credit Limits) | Pending | - |
 | **Phase 4** | Core Financial Engine (Udhaar Dena / Jama Lena & Reversals) | Pending | - |
 | **Phase 5** | Customer Ledger, Transaction History & Slip Attachments | Pending | - |
@@ -16,30 +16,25 @@
 
 ---
 
-## Phase 1 Deliverables Summary
-- **Laravel 12 Framework**: Installed Laravel `12.73.0` with PHP `8.2.12` and enabled PHP `intl` and `bcmath` extensions.
-- **MySQL Database**: Connected to MySQL `8.2.0` on port 3306 (`hisabkitab`), configured `.env`.
-- **Database Migrations**: Ran 9 migrations with full foreign keys, indexes, and precision decimal(15,2) constraints:
-  - `tenants`
-  - `users` (with `tenant_id`, `role`, `phone`, `is_active`)
-  - `customers` (with `tenant_id`, `current_balance`, `credit_limit`)
-  - `transactions` (with `tenant_id`, `customer_id`, `user_id`, `type`, `running_balance`)
-  - `transaction_reversals` (audit trail)
-  - `plans` and `subscriptions`
-  - `whatsapp_logs`
-- **Multi-Tenancy Infrastructure**:
-  - `TenantScope`: Global query scope ensuring shop data isolation.
-  - `BelongsToTenant`: Model trait auto-attaching tenant scope and auto-populating `tenant_id`.
-  - Policies: `CustomerPolicy` and `TransactionPolicy` for authorization.
-- **Frontend Assets & Layouts**:
-  - Installed Bootstrap 5.3, Bootstrap Icons, and Chart.js via npm; DomPDF via composer.
-  - Vite asset compilation tested and verified (`app.css` and `app.js`).
-  - Base responsive layouts:
-    - `layouts/app.blade.php` (Authenticated layout with collapsible mobile-friendly sidebar, top navbar, footer, alert banners).
-    - `layouts/guest.blade.php` (Public / Guest layout).
-    - Components: `sidebar.blade.php`, `header.blade.php`, `footer.blade.php`, `alerts.blade.php`.
-    - Landing page: `welcome.blade.php`.
-- **Core Architecture Skeletons**:
-  - `TransactionService`, `BalanceService`, `ReportService`, `WhatsappService`.
-- **Automated Tests**:
-  - `Phase1ArchitectureTest` verifying guest layout, tenant/user models, role helper methods, and tenant isolation through `TenantScope`. All 5 tests passed (15 assertions).
+## Phase 2 Deliverables Summary
+- **Shop Owner Registration**:
+  - `RegisterController` with atomic DB transaction.
+  - Generates unique tenant slug, creates `Tenant` entity (`status: active`), creates `User` (`role: shop_owner`), attaches Starter Trial Subscription (`Plan`).
+  - Strict validation via `RegisterRequest` for 10-digit Indian mobile number (`^[6-9]\d{9}$`), unique checks, and password confirmation.
+- **Flexible Authentication (Mobile or Email)**:
+  - `LoginController` supporting login with either 10-digit Indian mobile number or email address.
+  - Rate limiting (5 attempts/min) using `RateLimiter`.
+  - Secure session regeneration upon login; full invalidation upon logout.
+- **Account & Tenant Status Enforcement**:
+  - Middleware `EnsureTenantIsActive` registered as `tenant.active` protecting all private routes.
+  - Immediate denial and session termination if a tenant is marked `suspended` or `inactive`.
+  - Deactivated user protection (`is_active: false`).
+- **Password Reset Flow**:
+  - `ForgotPasswordController` with `password_reset_tokens` handling mobile or email account recovery.
+- **Shop Profile Management (IDOR-Safe)**:
+  - `ShopProfileController` (`GET /shop/profile`, `POST /shop/profile`).
+  - Always resolves tenant strictly from `auth()->user()->tenant`. Never takes or trusts tenant IDs from request input or URL parameters.
+  - Supports editing shop name, owner name, mobile, email, address, GSTIN, currency, and store logo upload.
+- **Automated Verification**:
+  - `Phase2AuthenticationAndMultiTenancyTest` with 7 feature tests covering registration, login with mobile, login with email, logout, data isolation between multiple shops, unauthenticated access blocking, IDOR prevention, and suspended tenant blocking.
+  - Full suite status: 12 tests, 67 assertions, all passing.

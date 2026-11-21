@@ -36,6 +36,7 @@ class Phase1ArchitectureTest extends TestCase
         $owner = User::create([
             'tenant_id' => $tenant->id,
             'name' => 'Rajesh Patel',
+            'phone' => '9876543210',
             'email' => 'owner@patelstore.com',
             'password' => bcrypt('password123'),
             'role' => 'shop_owner',
@@ -45,6 +46,7 @@ class Phase1ArchitectureTest extends TestCase
         $superAdmin = User::create([
             'tenant_id' => null,
             'name' => 'Platform Admin',
+            'phone' => '9999999999',
             'email' => 'admin@hisabkitab.test',
             'password' => bcrypt('admin123'),
             'role' => 'super_admin',
@@ -69,6 +71,7 @@ class Phase1ArchitectureTest extends TestCase
         $user1 = User::create([
             'tenant_id' => $tenant1->id,
             'name' => 'Owner 1',
+            'phone' => '9811111111',
             'email' => 'owner1@test.com',
             'password' => bcrypt('password'),
             'role' => 'shop_owner',
@@ -84,6 +87,7 @@ class Phase1ArchitectureTest extends TestCase
         $user2 = User::create([
             'tenant_id' => $tenant2->id,
             'name' => 'Owner 2',
+            'phone' => '9822222222',
             'email' => 'owner2@test.com',
             'password' => bcrypt('password'),
             'role' => 'shop_owner',

@@ -28,7 +28,7 @@
         <div class="hk-sidebar-heading">Main Overview</div>
         <ul class="nav flex-column mb-3">
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('dashboard*') ? 'active' : '' }}" href="{{ url('/dashboard') }}">
+                <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
                     <i class="bi bi-speedometer2"></i>
                     <span>Dashboard</span>
                 </a>
@@ -82,7 +82,7 @@
         <div class="hk-sidebar-heading">Settings & SaaS</div>
         <ul class="nav flex-column mb-3">
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('shop/profile*') ? 'active' : '' }}" href="{{ url('/shop/profile') }}">
+                <a class="nav-link {{ request()->routeIs('shop.profile*') ? 'active' : '' }}" href="{{ route('shop.profile') }}">
                     <i class="bi bi-gear-fill"></i>
                     <span>Shop Settings</span>
                 </a>

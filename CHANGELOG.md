@@ -2,25 +2,30 @@
 
 All notable changes to the HisabKitab SaaS project will be documented in this file.
 
+## [Phase 2] - 2026-11-22
+### Added
+- Implemented Shop Owner Registration with atomic DB transaction creating Tenant, Owner User, and 30-day Free Trial.
+- Implemented Login supporting both Indian mobile numbers (`^[6-9]\d{9}$`) and email addresses.
+- Implemented brute-force login rate limiting (5 attempts/minute) using Laravel RateLimiter.
+- Implemented Logout with full session invalidation and CSRF token regeneration.
+- Implemented Forgot Password and Reset Password recovery flow using `password_reset_tokens`.
+- Created `EnsureTenantIsActive` middleware (`tenant.active`) to deny access if a shop is suspended or user is deactivated.
+- Implemented IDOR-safe Shop Profile Management (`/shop/profile`) strictly bound to `auth()->user()->tenant`.
+- Built Blade views:
+  - `resources/views/auth/register.blade.php`
+  - `resources/views/auth/login.blade.php`
+  - `resources/views/auth/forgot-password.blade.php`
+  - `resources/views/auth/reset-password.blade.php`
+  - `resources/views/shop/profile.blade.php`
+  - `resources/views/dashboard.blade.php`
+- Created and passed automated test suite in `tests/Feature/Phase2AuthenticationAndMultiTenancyTest.php` (7 tests, 52 assertions).
+
 ## [Phase 1] - 2026-11-22
 ### Added
 - Created clean Laravel 12.73.0 project on PHP 8.2.12.
 - Configured MySQL 8.2 database (`hisabkitab`) and environment variables in `.env`.
-- Enabled PHP `intl` extension for currency and locale formatting.
-- Installed Bootstrap 5, Bootstrap Icons, Chart.js via npm and configured Vite.
-- Installed `barryvdh/laravel-dompdf` for PDF generation.
-- Created multi-tenant database migrations:
-  - `tenants`, `users`, `customers`, `transactions`, `transaction_reversals`, `plans`, `subscriptions`, `whatsapp_logs`.
+- Enabled PHP `intl` and `bcmath` extensions.
+- Installed Bootstrap 5, Bootstrap Icons, Chart.js via npm; installed `barryvdh/laravel-dompdf` via composer.
+- Built multi-tenant database migrations with `DECIMAL(15,2)` precision and foreign keys.
 - Implemented `TenantScope` and `BelongsToTenant` trait for strict server-side tenant isolation.
-- Created core models: `Tenant`, `User`, `Customer`, `Transaction`, `TransactionReversal`, `Plan`, `Subscription`, `WhatsappLog`.
-- Created authorization policies: `CustomerPolicy`, `TransactionPolicy`.
-- Created core business service skeletons: `TransactionService`, `BalanceService`, `ReportService`, `WhatsappService`.
-- Built reusable UI layouts and components:
-  - `resources/views/layouts/app.blade.php` (Authenticated layout with mobile sidebar)
-  - `resources/views/layouts/guest.blade.php` (Guest layout)
-  - `resources/views/layouts/partials/header.blade.php`
-  - `resources/views/layouts/partials/sidebar.blade.php`
-  - `resources/views/layouts/partials/footer.blade.php`
-  - `resources/views/layouts/partials/alerts.blade.php`
-  - `resources/views/welcome.blade.php` (Landing page)
-- Implemented and passed automated test suite (`Phase1ArchitectureTest`).
+- Created reusable layouts (`app.blade.php`, `guest.blade.php`, `header.blade.php`, `sidebar.blade.php`, `footer.blade.php`, `alerts.blade.php`, `welcome.blade.php`).

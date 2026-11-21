@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tenant_id')->nullable()->constrained('tenants')->onDelete('cascade');
             $table->string('name', 100);
-            $table->string('email', 150)->unique();
-            $table->string('phone', 20)->nullable()->index();
+            $table->string('phone', 20)->unique();
+            $table->string('email', 150)->nullable()->unique();
             $table->enum('role', ['super_admin', 'shop_owner', 'shop_staff'])->default('shop_owner');
             $table->string('password', 255);
             $table->boolean('is_active')->default(true);
