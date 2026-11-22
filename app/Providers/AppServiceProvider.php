@@ -24,8 +24,8 @@ class AppServiceProvider extends ServiceProvider
         // Use Bootstrap 5 pagination markup across all paginated views
         Paginator::useBootstrapFive();
 
-        // Enforce HTTPS URLs in production or when explicitly configured
-        if (config('app.env') === 'production' || env('FORCE_HTTPS', false)) {
+        // Enforce HTTPS URLs only when explicitly configured or over secure requests
+        if (env('FORCE_HTTPS', false) || request()->isSecure()) {
             URL::forceScheme('https');
         }
     }
