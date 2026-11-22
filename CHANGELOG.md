@@ -2,52 +2,52 @@
 
 All notable changes to the HisabKitab SaaS project will be documented in this file.
 
+## [Phase 8] - 2026-11-22
+### Added
+- Created database migration `2026_11_22_000008_create_super_admin_tables.php`:
+  - Created `platform_settings` table for site-wide configuration.
+  - Created `admin_activity_logs` table for administrative audit trails.
+  - Enhanced `subscription_payments` table with `refund_status` and `refunded_at`.
+- Created `PlatformSetting` model (`app/Models/PlatformSetting.php`) with key-value accessors (`get`, `set`).
+- Created `AdminActivityLog` model (`app/Models/AdminActivityLog.php`) with `log()` helper.
+- Created `EnsureUserIsSuperAdmin` middleware (`app/Http/Middleware/EnsureUserIsSuperAdmin.php`) and registered `'super_admin'` alias in `bootstrap/app.php`.
+- Created `AdminDashboardController` (`app/Http/Controllers/Admin/AdminDashboardController.php`) computing global SaaS metrics (Total Shops, Active, Suspended, Subscribers, Active Subs, MRR, Revenue Collected) and activity feeds.
+- Created `ShopManagementController` (`app/Http/Controllers/Admin/ShopManagementController.php`) with shop search, profile view, and Activate/Suspend toggles.
+- Enhanced `PlanController` (`app/Http/Controllers/Admin/PlanController.php`) with `create`, `store`, and safe `destroy` methods protecting plans with active subscribers.
+- Created `PaymentManagementController` (`app/Http/Controllers/Admin/PaymentManagementController.php`) with date filtering, status filtering, search, and refund processing.
+- Created `PlatformSettingsController` (`app/Http/Controllers/Admin/PlatformSettingsController.php`) managing platform settings.
+- Built Super Admin Blade views:
+  - `resources/views/admin/dashboard.blade.php`
+  - `resources/views/admin/shops/index.blade.php`
+  - `resources/views/admin/shops/show.blade.php`
+  - `resources/views/admin/plans/create.blade.php`
+  - `resources/views/admin/payments/index.blade.php`
+  - `resources/views/admin/settings/index.blade.php`
+- Updated sidebar (`resources/views/layouts/partials/sidebar.blade.php`) with Super Admin Panel navigation section.
+- Registered all `/admin/*` routes in `routes/web.php` protected by `auth` and `super_admin` middleware.
+- Implemented and passed automated test suite in `tests/Feature/Phase8SuperAdminPanelTest.php` (8 tests, 41 assertions). Full test suite now passes 63 tests, 334 assertions (0 failures).
+
 ## [Phase 7] - 2026-11-22
 ### Added
-- Created official SaaS subscription plans (`PlanSeeder`):
-  - **Free Plan**: ₹0, 25 customers, basic ledger & basic reports.
-  - **Basic Plan**: ₹99/mo, 200 customers, PDF statements & WhatsApp reminders.
-  - **Pro Plan**: ₹199/mo, unlimited customers, CSV exports, advanced reports & priority support.
-- Added database migration `2026_11_22_000007_create_subscription_management_tables.php`:
-  - Added `slug` and `description` to `plans`.
-  - Added `trial_ends_at` and `grace_ends_at` to `subscriptions`.
-  - Created `subscription_payments` table for payment audit trails.
-- Created `SubscriptionPayment` model (`app/Models/SubscriptionPayment.php`).
-- Created `SubscriptionService` (`app/Services/SubscriptionService.php`) providing:
-  - Razorpay order creation (`createRazorpayOrder`).
-  - Server-side HMAC-SHA256 signature verification and atomic activation (`verifyAndActivatePayment`).
-  - Webhook processing with HMAC-SHA256 signature verification and idempotency protection (`processWebhook`).
-  - Customer quota check (`canAddCustomer`) and feature gate check (`canAccessFeature`).
-  - Subscription status metadata with grace period detection.
-- Created `EnforceSubscriptionLimits` middleware (`app/Http/Middleware/EnforceSubscriptionLimits.php`):
-  - Blocks expired shops past grace period from executing business operations.
-  - Enforces feature gates (`csv_exports`, `pdf_statements`).
-  - Registered `'subscription'` middleware alias in `bootstrap/app.php`.
-- Exempted `/webhook/razorpay` from CSRF verification in `bootstrap/app.php`.
-- Created `SubscriptionController` (`app/Http/Controllers/SubscriptionController.php`):
-  - Subscription portal view with current status, customer quota progress bar, and pricing tiers.
-  - Order creation and payment signature verification endpoints.
-  - Razorpay webhook listener.
-- Created Super Admin Plan Management Controller (`app/Http/Controllers/Admin/PlanController.php`) and views (`resources/views/admin/plans/index.blade.php`, `resources/views/admin/plans/edit.blade.php`).
-- Built customer quota enforcement in `CustomerController@store`: prevents adding customers beyond plan limits.
-- Built feature restrictions in `ReportController@exportCsv` (Pro plan required) and `CustomerController@statementPdf` (Basic/Pro plan required).
-- Built frontend view `resources/views/subscription/index.blade.php` with Razorpay checkout integration, status card, pricing grid, and payment history.
-- Implemented and passed automated test suite in `tests/Feature/Phase7SubscriptionManagementTest.php` (9 tests, 54 assertions). Full test suite now passes 55 tests, 293 assertions (0 failures).
+- Created official SaaS subscription plans (`PlanSeeder`): Free (₹0, 25 customers), Basic (₹99/mo, 200 customers), Pro (₹199/mo, unlimited customers).
+- Added database migration `2026_11_22_000007_create_subscription_management_tables.php`.
+- Created `SubscriptionPayment` model and `SubscriptionService` with Razorpay orders, HMAC-SHA256 signature verification, webhooks, and quotas.
+- Created `EnforceSubscriptionLimits` middleware and registered alias in `bootstrap/app.php`.
+- Created `SubscriptionController` and shop owner subscription portal (`/subscription`).
+- Implemented and passed automated test suite in `tests/Feature/Phase7SubscriptionManagementTest.php` (9 tests, 54 assertions).
 
 ## [Phase 6] - 2026-11-22
 ### Added
-- Created `WhatsappService` (`app/Services/WhatsappService.php`) with multi-language reminder templates and click-to-chat URL generator.
-- Created `CurrencyHelper` (`app/Helpers/CurrencyHelper.php`) to convert monetary amounts to Indian currency words.
-- Created `WhatsappController` (`app/Http/Controllers/WhatsappController.php`).
-- Added database migration updating `whatsapp_logs` table.
-- Built customer account statement PDF generator (`CustomerController@statementPdf` and `statement-pdf.blade.php`).
-- Built payment receipt PDF generator (`TransactionController@receiptPdf` and `receipt-pdf.blade.php`).
+- Created `WhatsappService` with multi-language reminder templates and click-to-chat URL generator.
+- Created `CurrencyHelper` to convert monetary amounts to Indian currency words.
+- Created `WhatsappController` and updated `whatsapp_logs` table.
+- Built customer account statement PDF generator and payment receipt PDF generator.
 - Updated `show.blade.php` with interactive WhatsApp Reminder Modal and communication history table.
 - Implemented and passed automated test suite in `tests/Feature/Phase6WhatsAppAndPdfTest.php` (8 tests, 37 assertions).
 
 ## [Phase 5] - 2026-11-22
 ### Added
-- Created `ReportService` (`app/Services/ReportService.php`) providing dashboard metrics, period reports, customer summaries, and collection reports.
+- Created `ReportService` providing dashboard metrics, period reports, customer summaries, and collection reports.
 - Updated `DashboardController` and `ReportController` supporting tabbed views, date filtering, PDF export, and streamed CSV export.
 - Redesigned `resources/views/dashboard.blade.php` with 6 metric cards, 2 Chart.js analytics charts, recent transactions, and top debtor accounts.
 - Built DomPDF report template `resources/views/reports/pdf.blade.php`.

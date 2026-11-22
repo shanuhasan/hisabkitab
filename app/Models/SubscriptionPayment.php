@@ -22,6 +22,8 @@ class SubscriptionPayment extends Model
         'gateway_payment_id',
         'gateway_signature',
         'status',
+        'refund_status',
+        'refunded_at',
         'idempotency_key',
         'error_description',
         'metadata',
@@ -32,6 +34,7 @@ class SubscriptionPayment extends Model
         return [
             'amount' => 'decimal:2',
             'metadata' => 'array',
+            'refunded_at' => 'datetime',
         ];
     }
 

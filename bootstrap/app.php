@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'tenant.active' => \App\Http\Middleware\EnsureTenantIsActive::class,
             'subscription' => \App\Http\Middleware\EnforceSubscriptionLimits::class,
+            'super_admin' => \App\Http\Middleware\EnsureUserIsSuperAdmin::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [

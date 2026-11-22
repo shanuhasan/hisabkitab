@@ -93,15 +93,43 @@
                     <span>Subscription Plan</span>
                 </a>
             </li>
-            @if(auth()->user() && auth()->user()->role === 'super_admin')
+        </ul>
+
+        @if(auth()->user() && auth()->user()->role === 'super_admin')
+            <div class="hk-sidebar-heading text-warning">Super Admin Panel</div>
+            <ul class="nav flex-column mb-3">
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->is('admin*') ? 'active' : '' }}" href="{{ url('/admin') }}">
-                        <i class="bi bi-shield-lock-fill text-warning"></i>
-                        <span>Super Admin Panel</span>
+                    <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                        <i class="bi bi-speedometer text-warning"></i>
+                        <span>Admin Overview</span>
                     </a>
                 </li>
-            @endif
-        </ul>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.shops*') ? 'active' : '' }}" href="{{ route('admin.shops.index') }}">
+                        <i class="bi bi-shop text-info"></i>
+                        <span>Manage Shops</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.plans*') ? 'active' : '' }}" href="{{ route('admin.plans.index') }}">
+                        <i class="bi bi-tags-fill text-primary"></i>
+                        <span>SaaS Plans</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.payments*') ? 'active' : '' }}" href="{{ route('admin.payments.index') }}">
+                        <i class="bi bi-cash-stack text-success"></i>
+                        <span>Gateway Payments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">
+                        <i class="bi bi-gear-fill text-secondary"></i>
+                        <span>Platform Settings</span>
+                    </a>
+                </li>
+            </ul>
+        @endif
     </nav>
 
     <!-- Sidebar Footer -->

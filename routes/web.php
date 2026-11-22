@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\PaymentManagementController;
 use App\Http\Controllers\Admin\PlanController as AdminPlanController;
+use App\Http\Controllers\Admin\PlatformSettingsController;
+use App\Http\Controllers\Admin\ShopManagementController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -88,9 +92,29 @@ Route::middleware(['auth', 'tenant.active'])->group(function () {
 // Razorpay Webhook Handler (External, CSRF-exempt)
 Route::post('/webhook/razorpay', [SubscriptionController::class, 'handleWebhook'])->name('webhook.razorpay');
 
-// Super Admin Plan Management Routes
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+// Super Admin Management Portal Routes (Strict Role & Route Protection)
+Route::middleware(['auth', 'super_admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Admin Dashboard
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Shop / Tenant Management
+    Route::get('/shops', [ShopManagementController::class, 'index'])->name('shops.index');
+    Route::get('/shops/{shop}', [ShopManagementController::class, 'show'])->name('shops.show');
+    Route::post('/shops/{shop}/toggle-status', [ShopManagementController::class, 'toggleStatus'])->name('shops.toggle_status');
+
+    // SaaS Subscription Plans Management
     Route::get('/plans', [AdminPlanController::class, 'index'])->name('plans.index');
+    Route::get('/plans/create', [AdminPlanController::class, 'create'])->name('plans.create');
+    Route::post('/plans', [AdminPlanController::class, 'store'])->name('plans.store');
     Route::get('/plans/{plan}/edit', [AdminPlanController::class, 'edit'])->name('plans.edit');
     Route::put('/plans/{plan}', [AdminPlanController::class, 'update'])->name('plans.update');
+    Route::delete('/plans/{plan}', [AdminPlanController::class, 'destroy'])->name('plans.destroy');
+
+    // Payments Management & Auditing
+    Route::get('/payments', [PaymentManagementController::class, 'index'])->name('payments.index');
+    Route::post('/payments/{payment}/refund', [PaymentManagementController::class, 'refund'])->name('payments.refund');
+
+    // Global Platform Settings
+    Route::get('/settings', [PlatformSettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [PlatformSettingsController::class, 'update'])->name('settings.update');
 });
