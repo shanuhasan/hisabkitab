@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\View\View;
 
 class SubscriptionController extends Controller
@@ -38,6 +39,15 @@ class SubscriptionController extends Controller
      */
     public function createOrder(Request $request): JsonResponse
     {
+        $throttleKey = 'sub-order:' . auth()->id();
+        if (RateLimiter::tooManyAttempts($throttleKey, 10)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Too many requests. Please wait a moment before initiating another checkout.',
+            ], 429);
+        }
+        RateLimiter::hit($throttleKey, 60);
+
         $validated = $request->validate([
             'plan_id' => ['required', 'exists:plans,id'],
         ]);
@@ -64,6 +74,18 @@ class SubscriptionController extends Controller
      */
     public function verifyPayment(Request $request): JsonResponse|RedirectResponse
     {
+        $throttleKey = 'sub-verify:' . auth()->id();
+        if (RateLimiter::tooManyAttempts($throttleKey, 10)) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Too many verification attempts. Please wait a moment.',
+                ], 429);
+            }
+            return back()->with('error', 'Too many verification attempts. Please wait a moment.');
+        }
+        RateLimiter::hit($throttleKey, 60);
+
         $validated = $request->validate([
             'razorpay_order_id' => ['required', 'string'],
             'razorpay_payment_id' => ['required', 'string'],

@@ -37,6 +37,20 @@ class TransactionService
             $type = $data['type']; // 'credit' or 'payment'
             $allowAdvance = !empty($data['allow_advance']);
 
+            // Security & Integrity: Prevent accidental duplicate submissions (e.g. double clicks within 3 seconds)
+            $recentDuplicate = Transaction::where('tenant_id', $user->tenant_id)
+                ->where('customer_id', $lockedCustomer->id)
+                ->where('type', $type)
+                ->where('amount', $amount)
+                ->where('created_at', '>=', now()->subSeconds(3))
+                ->exists();
+
+            if ($recentDuplicate) {
+                throw ValidationException::withMessages([
+                    'amount' => 'A duplicate transaction with the exact same amount was submitted just now. Please wait a moment before trying again.',
+                ]);
+            }
+
             // Financial Rule: Validate payment amount against outstanding balance
             if ($type === 'payment' && !$allowAdvance) {
                 // If customer balance is <= 0 or payment exceeds balance

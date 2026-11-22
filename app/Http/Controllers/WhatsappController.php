@@ -8,6 +8,7 @@ use App\Services\WhatsappService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 
 class WhatsappController extends Controller
 {
@@ -21,6 +22,18 @@ class WhatsappController extends Controller
         if ($customer->tenant_id !== auth()->user()->tenant_id) {
             abort(403, 'Unauthorized access to customer.');
         }
+
+        $throttleKey = 'whatsapp-remind:' . auth()->id();
+        if (RateLimiter::tooManyAttempts($throttleKey, 30)) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Too many reminder requests sent. Please wait a moment.',
+                ], 429);
+            }
+            return back()->with('error', 'Too many reminder requests sent. Please wait a moment.');
+        }
+        RateLimiter::hit($throttleKey, 60);
 
         $validated = $request->validate([
             'phone' => ['required', 'string', 'max:20'],

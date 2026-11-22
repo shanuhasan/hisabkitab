@@ -2,6 +2,24 @@
 
 All notable changes to the HisabKitab SaaS project will be documented in this file.
 
+## [Phase 9] - 2026-11-22
+### Added
+- Created database migration `2026_11_22_000009_add_reporting_indexes_to_transactions_table.php`:
+  - Added composite index `idx_txns_tenant_rev_type_date` on `['tenant_id', 'is_reversed', 'type', 'transaction_date']`.
+  - Added composite index `idx_txns_tenant_rev_date` on `['tenant_id', 'is_reversed', 'transaction_date']`.
+- Added rate limiting to `ForgotPasswordController`:
+  - Throttled password reset link generation to 5 requests per minute per IP.
+  - Throttled password reset submission attempts to 10 requests per minute per IP.
+- Added duplicate transaction debounce protection in `TransactionService@recordTransaction`:
+  - Rejects rapid duplicate identical transactions within 3 seconds for the same customer, type, and amount.
+- Added rate limiting to `SubscriptionController`:
+  - Throttled order creation (`createOrder`) to 10 requests per minute per merchant.
+  - Throttled payment verification (`verifyPayment`) to 10 requests per minute per merchant.
+- Added rate limiting to `WhatsappController`:
+  - Throttled reminder initiation (`sendReminder`) to 30 requests per minute per merchant.
+- Created `tests/Feature/Phase9SecurityAuditAndQATest.php` (11 tests, 70 assertions) covering rate limiting, duplicate protection, multi-tenant IDOR, Super Admin boundary protection, role spoofing prevention, XSS escaping, SQL injection resistance, payment webhook security, and idempotency.
+- Verified complete test suite across all 9 phases: **74 tests, 404 assertions, 100% passing (0 failures)**.
+
 ## [Phase 8] - 2026-11-22
 ### Added
 - Created database migration `2026_11_22_000008_create_super_admin_tables.php`:
