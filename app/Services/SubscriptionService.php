@@ -22,9 +22,9 @@ class SubscriptionService
 
     public function __construct()
     {
-        $this->razorpayKey = config('services.razorpay.key', env('RAZORPAY_KEY_ID', 'rzp_test_hisabkitab_key'));
-        $this->razorpaySecret = config('services.razorpay.secret', env('RAZORPAY_KEY_SECRET', 'test_secret_hisabkitab_123'));
-        $this->webhookSecret = config('services.razorpay.webhook_secret', env('RAZORPAY_WEBHOOK_SECRET', 'test_webhook_secret_123'));
+        $this->razorpayKey = config('services.razorpay.key') ?? env('RAZORPAY_KEY_ID', 'rzp_test_hisabkitab_key');
+        $this->razorpaySecret = config('services.razorpay.secret') ?? env('RAZORPAY_KEY_SECRET', 'test_secret_hisabkitab_123');
+        $this->webhookSecret = config('services.razorpay.webhook_secret') ?? env('RAZORPAY_WEBHOOK_SECRET', 'test_webhook_secret_123');
     }
 
     /**

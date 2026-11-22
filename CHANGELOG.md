@@ -2,6 +2,21 @@
 
 All notable changes to the HisabKitab SaaS project will be documented in this file.
 
+## [Phase 10] - 2026-11-22
+### Added
+- Created production environment template `.env.production.example` with hardened security settings (`APP_ENV=production`, `APP_DEBUG=false`, `FORCE_HTTPS=true`, secure cookie flags, daily error logging).
+- Updated `app/Providers/AppServiceProvider.php` to enforce HTTPS when in production or when `FORCE_HTTPS=true`, and set `Paginator::useBootstrapFive()`.
+- Added Razorpay service mapping to `config/services.php` to support Laravel `config:cache` without breaking `SubscriptionService`.
+- Created artisan command `hisabkitab:backup` (`app/Console/Commands/DatabaseBackupCommand.php`) with timestamped database dumps and 7-day retention pruning.
+- Created artisan command `hisabkitab:restore` (`app/Console/Commands/DatabaseRestoreCommand.php`) for interactive or forced database restoration.
+- Created artisan command `hisabkitab:check-subscriptions` (`app/Console/Commands/CheckSubscriptionsCommand.php`) for scanning and marking expired tenant subscriptions.
+- Registered automated daily tasks in `routes/console.php` (subscription expiry check, database backup at 02:00 AM, and password reset token cleanup).
+- Created comprehensive operational and production documentation:
+  - `DEPLOYMENT.md` (Complete Nginx, PHP-FPM, Supervisor, SSL, and Cron deployment manual).
+  - `docs/BACKUP_GUIDE.md` (Automated, manual, and S3 offsite database backup procedures).
+  - `docs/RESTORATION_GUIDE.md` (Disaster recovery and database restoration procedures).
+  - `docs/TROUBLESHOOTING.md` (Production issue diagnostic guide for 500 errors, permissions, webhooks, and queues).
+
 ## [Phase 9] - 2026-11-22
 ### Added
 - Created database migration `2026_11_22_000009_add_reporting_indexes_to_transactions_table.php`:

@@ -12,6 +12,30 @@
 | **Phase 7** | SaaS Subscription Plans, Razorpay Gateway & Quota Enforcement | **Completed** | 2026-11-22 |
 | **Phase 8** | Super Admin Management Portal & Multi-Shop Analytics | **Completed** | 2026-11-22 |
 | **Phase 9** | Security Audit, Quality Assurance & Performance Optimization | **Completed** | 2026-11-22 |
+| **Phase 10** | Production Deployment & Operational Guides | **Completed** | 2026-11-22 |
+
+---
+
+## Phase 10 Deliverables Summary
+- **Production Configuration & Hardening**:
+  - Configured HTTPS force redirection in `AppServiceProvider` when `APP_ENV=production` or `FORCE_HTTPS=true`.
+  - Configured Bootstrap 5 pagination across all paginated views (`Paginator::useBootstrapFive()`).
+  - Added dedicated Razorpay configuration to `config/services.php` to ensure cached configuration reads `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, and `RAZORPAY_WEBHOOK_SECRET` reliably without depending on direct `env()` calls.
+  - Created `.env.production.example` template with production defaults (`APP_ENV=production`, `APP_DEBUG=false`, `FORCE_HTTPS=true`, database pooling, logging to daily channel, secure session cookies).
+- **Automated Backup & Restoration Engine**:
+  - Implemented `hisabkitab:backup` console command (`DatabaseBackupCommand`) with timestamped SQL generation and automatic 7-day retention pruning.
+  - Implemented `hisabkitab:restore` console command (`DatabaseRestoreCommand`) supporting point-in-time restoration from backup files.
+  - Implemented `hisabkitab:check-subscriptions` console command (`CheckSubscriptionsCommand`) for daily expiry scans.
+  - Registered daily cron schedules in `routes/console.php` for subscription checks, database backups, and password reset token pruning.
+- **Documentation & Operational Guides**:
+  - Created `DEPLOYMENT.md`: Comprehensive guide for Ubuntu Linux, Nginx virtual hosts, Let's Encrypt SSL/Certbot, Supervisor background queue workers, and system cron.
+  - Created `docs/BACKUP_GUIDE.md`: Automated, manual, and cloud S3 backup instructions with integrity verification.
+  - Created `docs/RESTORATION_GUIDE.md`: Step-by-step restoration procedures, safety precautions, and post-restoration verification checks.
+  - Created `docs/TROUBLESHOOTING.md`: Rapid incident diagnosis and solutions for HTTP 500 errors, permissions, database connections, Razorpay webhook signature mismatches, rate limiting, and queue worker stalls.
+- **Verification & Testing**:
+  - Tested Artisan backup command: generated clean 26.65 KB database dump in `storage/app/backups/`.
+  - Tested Laravel optimization commands: `config:cache`, `route:cache`, and `storage:link` execute cleanly without errors.
+  - Complete test suite passing: **74 tests, 404 assertions (0 failures)**.
 
 ---
 
