@@ -1,4 +1,4 @@
-# Database Schema Design — HisabKitab SaaS
+# Database Schema Design — UdhaarHisab SaaS
 
 All financial numbers are stored in `DECIMAL(15, 2)` to eliminate floating-point rounding errors. Every tenant-owned table contains `tenant_id` with foreign key and composite indexes for high query performance and guaranteed tenant isolation.
 

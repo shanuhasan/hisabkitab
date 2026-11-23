@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Transaction ' . $transaction->transaction_number . ' — HisabKitab')
+@section('title', 'Transaction ' . $transaction->transaction_number . ' — UdhaarHisab')
 @section('header', 'Transaction: ' . $transaction->transaction_number)
 @section('subheader', 'Recorded on ' . $transaction->transaction_date->format('d M Y'))
 

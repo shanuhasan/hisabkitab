@@ -55,7 +55,7 @@
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="userMenuDrop">
                     <li class="px-3 py-2 border-bottom">
                         <div class="fw-bold small">{{ auth()->user()->name ?? 'Shopkeeper' }}</div>
-                        <div class="text-muted text-truncate" style="font-size: 0.75rem;">{{ auth()->user()->email ?? 'user@hisabkitab.test' }}</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.75rem;">{{ auth()->user()->email ?? 'user@udhaarhisab.test' }}</div>
                     </li>
                     <li>
                         <a class="dropdown-item py-2 small" href="{{ url('/shop/profile') }}">

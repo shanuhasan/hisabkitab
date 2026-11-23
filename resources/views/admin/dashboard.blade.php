@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Super Admin Dashboard — HisabKitab SaaS')
+@section('title', 'Super Admin Dashboard — UdhaarHisab SaaS')
 @section('header', 'Super Admin Command Center')
 @section('subheader', 'Global SaaS multi-tenant metrics, subscriber health, revenue and administrative operations')
 

@@ -286,7 +286,7 @@
 
     <!-- Footer -->
     <div class="footer">
-        This is a computer-generated account statement &bull; Powered by HisabKitab SaaS &bull; Digital Udhaar Khata System
+        This is a computer-generated account statement &bull; Powered by UdhaarHisab SaaS &bull; Digital Udhaar Khata System
     </div>
 
 </body>

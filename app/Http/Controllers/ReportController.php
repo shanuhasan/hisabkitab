@@ -83,7 +83,7 @@ class ReportController extends Controller
             'data' => $data,
         ]);
 
-        $fileName = 'HisabKitab-Report-' . $reportType . '-' . date('Ymd-His') . '.pdf';
+        $fileName = 'UdhaarHisab-Report-' . $reportType . '-' . date('Ymd-His') . '.pdf';
 
         return $pdf->download($fileName);
     }
@@ -103,7 +103,7 @@ class ReportController extends Controller
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
 
-        $fileName = 'HisabKitab-' . $reportType . '-' . date('Ymd') . '.csv';
+        $fileName = 'UdhaarHisab-' . $reportType . '-' . date('Ymd') . '.csv';
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',

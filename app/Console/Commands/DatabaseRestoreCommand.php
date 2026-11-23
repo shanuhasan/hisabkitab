@@ -14,14 +14,14 @@ class DatabaseRestoreCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'hisabkitab:restore {file? : Name or path of the backup file to restore} {--force : Force restoration without interactive prompt}';
+    protected $signature = 'udhaarhisab:restore {file? : Name or path of the backup file to restore} {--force : Force restoration without interactive prompt}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Restore the HisabKitab database from a SQL backup file';
+    protected $description = 'Restore the UdhaarHisab database from a SQL backup file';
 
     /**
      * Execute the console command.

@@ -1,4 +1,4 @@
-# HisabKitab — Production Troubleshooting Guide
+# UdhaarHisab — Production Troubleshooting Guide
 
 This guide helps resolve common operational and runtime issues in production.
 
@@ -9,7 +9,7 @@ This guide helps resolve common operational and runtime issues in production.
 ### Diagnosis:
 Check the latest Laravel error logs:
 ```bash
-tail -n 100 /var/www/hisabkitab/storage/logs/laravel.log
+tail -n 100 /var/www/udhaarhisab/storage/logs/laravel.log
 ```
 Check Nginx error logs:
 ```bash
@@ -29,13 +29,13 @@ sudo tail -n 50 /var/log/nginx/error.log
 ## 2. Storage & Cache Permission Errors
 
 ### Diagnosis:
-- Error: `The stream or file "/var/www/hisabkitab/storage/logs/laravel.log" could not be opened: failed to open stream: Permission denied`
+- Error: `The stream or file "/var/www/udhaarhisab/storage/logs/laravel.log" could not be opened: failed to open stream: Permission denied`
 
 ### Fix:
 Re-apply ownership and permissions to `storage` and `bootstrap/cache`:
 ```bash
-sudo chown -R www-data:www-data /var/www/hisabkitab/storage /var/www/hisabkitab/bootstrap/cache
-sudo chmod -R 775 /var/www/hisabkitab/storage /var/www/hisabkitab/bootstrap/cache
+sudo chown -R www-data:www-data /var/www/udhaarhisab/storage /var/www/udhaarhisab/bootstrap/cache
+sudo chmod -R 775 /var/www/udhaarhisab/storage /var/www/udhaarhisab/bootstrap/cache
 ```
 
 ---
@@ -43,7 +43,7 @@ sudo chmod -R 775 /var/www/hisabkitab/storage /var/www/hisabkitab/bootstrap/cach
 ## 3. Database Connection Errors
 
 ### Diagnosis:
-- Error: `SQLSTATE[HY000] [2002] Connection refused` or `Access denied for user 'hisabkitab_user'@'localhost'`
+- Error: `SQLSTATE[HY000] [2002] Connection refused` or `Access denied for user 'udhaarhisab_user'@'localhost'`
 
 ### Fix:
 1. Verify MySQL service is active:
@@ -87,7 +87,7 @@ sudo chmod -R 775 /var/www/hisabkitab/storage /var/www/hisabkitab/bootstrap/cach
    ```
 2. Ensure temporary directory write permissions for DomPDF:
    ```bash
-   sudo chmod -R 775 /var/www/hisabkitab/storage/framework/cache
+   sudo chmod -R 775 /var/www/udhaarhisab/storage/framework/cache
    ```
 3. Reload PHP-FPM:
    ```bash
@@ -132,7 +132,7 @@ sudo chmod -R 775 /var/www/hisabkitab/storage /var/www/hisabkitab/bootstrap/cach
    ```
 4. Check worker log:
    ```bash
-   tail -n 50 /var/www/hisabkitab/storage/logs/worker.log
+   tail -n 50 /var/www/udhaarhisab/storage/logs/worker.log
    ```
 
 ---

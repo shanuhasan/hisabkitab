@@ -1,6 +1,6 @@
-# HisabKitab SaaS — Production Deployment Guide
+# UdhaarHisab SaaS — Production Deployment Guide
 
-This guide covers deploying **HisabKitab** to a production Linux server (Ubuntu 22.04 / 24.04 LTS) running **PHP 8.2+**, **Nginx**, and **MySQL 8.0+**.
+This guide covers deploying **UdhaarHisab** to a production Linux server (Ubuntu 22.04 / 24.04 LTS) running **PHP 8.2+**, **Nginx**, and **MySQL 8.0+**.
 
 ---
 
@@ -25,24 +25,24 @@ sudo mv composer.phar /usr/local/bin/composer
 
 ## 2. Code Deployment & Directory Permissions
 
-Clone or upload the repository to `/var/www/hisabkitab`:
+Clone or upload the repository to `/var/www/udhaarhisab`:
 
 ```bash
 cd /var/www
-git clone <YOUR_GIT_REPO_URL> hisabkitab
-cd /var/www/hisabkitab
+git clone <YOUR_GIT_REPO_URL> udhaarhisab
+cd /var/www/udhaarhisab
 
 # Install production dependencies (no dev packages)
 composer install --no-dev --optimize-autoloader
 
 # Set appropriate ownership and permissions
-sudo chown -R www-data:www-data /var/www/hisabkitab
-sudo find /var/www/hisabkitab -type f -exec chmod 644 {} \;
-sudo find /var/www/hisabkitab -type d -exec chmod 755 {} \;
+sudo chown -R www-data:www-data /var/www/udhaarhisab
+sudo find /var/www/udhaarhisab -type f -exec chmod 644 {} \;
+sudo find /var/www/udhaarhisab -type d -exec chmod 755 {} \;
 
 # Grant write permissions to storage and bootstrap/cache
-sudo chmod -R 775 /var/www/hisabkitab/storage
-sudo chmod -R 775 /var/www/hisabkitab/bootstrap/cache
+sudo chmod -R 775 /var/www/udhaarhisab/storage
+sudo chmod -R 775 /var/www/udhaarhisab/bootstrap/cache
 
 # Create public storage symlink
 php artisan storage:link
@@ -66,9 +66,9 @@ nano .env
 Ensure the following production flags are strictly set in `.env`:
 - `APP_ENV=production`
 - `APP_DEBUG=false`
-- `APP_URL=https://hisabkitab.in`
+- `APP_URL=https://udhaarhisab.in`
 - `FORCE_HTTPS=true`
-- `DB_DATABASE=hisabkitab_production`
+- `DB_DATABASE=udhaarhisab_production`
 - `DB_USERNAME=your_secure_user`
 - `DB_PASSWORD=your_secure_password`
 - `RAZORPAY_KEY_ID=rzp_live_...`
@@ -82,9 +82,9 @@ Ensure the following production flags are strictly set in `.env`:
 Log in to MySQL and create the database:
 
 ```sql
-CREATE DATABASE hisabkitab_production CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'hisabkitab_user'@'localhost' IDENTIFIED BY 'YOUR_SECURE_PASSWORD';
-GRANT ALL PRIVILEGES ON hisabkitab_production.* TO 'hisabkitab_user'@'localhost';
+CREATE DATABASE udhaarhisab_production CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'udhaarhisab_user'@'localhost' IDENTIFIED BY 'YOUR_SECURE_PASSWORD';
+GRANT ALL PRIVILEGES ON udhaarhisab_production.* TO 'udhaarhisab_user'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
 ```
@@ -123,7 +123,7 @@ php artisan event:cache
 Create an Nginx configuration file:
 
 ```bash
-sudo nano /etc/nginx/sites-available/hisabkitab.conf
+sudo nano /etc/nginx/sites-available/udhaarhisab.conf
 ```
 
 Add the following virtual host definition:
@@ -132,8 +132,8 @@ Add the following virtual host definition:
 server {
     listen 80;
     listen [::]:80;
-    server_name hisabkitab.in www.hisabkitab.in;
-    root /var/www/hisabkitab/public;
+    server_name udhaarhisab.in www.udhaarhisab.in;
+    root /var/www/udhaarhisab/public;
 
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-Content-Type-Options "nosniff";
@@ -168,12 +168,12 @@ server {
 Enable the site and obtain a free SSL certificate via Let's Encrypt:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/hisabkitab.conf /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/udhaarhisab.conf /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 
 # Install SSL certificate
-sudo certbot --nginx -d hisabkitab.in -d www.hisabkitab.in
+sudo certbot --nginx -d udhaarhisab.in -d www.udhaarhisab.in
 ```
 
 ---
@@ -183,15 +183,15 @@ sudo certbot --nginx -d hisabkitab.in -d www.hisabkitab.in
 Create a Supervisor worker configuration for processing background tasks (notifications, exports, webhook retries):
 
 ```bash
-sudo nano /etc/supervisor/conf.d/hisabkitab-worker.conf
+sudo nano /etc/supervisor/conf.d/udhaarhisab-worker.conf
 ```
 
 Add:
 
 ```ini
-[program:hisabkitab-worker]
+[program:udhaarhisab-worker]
 process_name=%(program_name)s_%(process_num)02d
-command=php /var/www/hisabkitab/artisan queue:work database --sleep=3 --tries=3 --max-time=3600
+command=php /var/www/udhaarhisab/artisan queue:work database --sleep=3 --tries=3 --max-time=3600
 autostart=true
 autorestart=true
 stopasgroup=true
@@ -199,7 +199,7 @@ killasgroup=true
 user=www-data
 numprocs=2
 redirect_stderr=true
-stdout_logfile=/var/www/hisabkitab/storage/logs/worker.log
+stdout_logfile=/var/www/udhaarhisab/storage/logs/worker.log
 stopwaitsecs=3600
 ```
 
@@ -225,12 +225,12 @@ sudo crontab -e -u www-data
 Add this single line:
 
 ```cron
-* * * * * cd /var/www/hisabkitab && php artisan schedule:run >> /dev/null 2>&1
+* * * * * cd /var/www/udhaarhisab && php artisan schedule:run >> /dev/null 2>&1
 ```
 
 This automates:
-- Subscription expiry scans (`hisabkitab:check-subscriptions`) daily at midnight.
-- Automated daily database backups (`hisabkitab:backup --retention=7`) daily at 02:00 AM.
+- Subscription expiry scans (`udhaarhisab:check-subscriptions`) daily at midnight.
+- Automated daily database backups (`udhaarhisab:backup --retention=7`) daily at 02:00 AM.
 - Expired password reset token purging (`auth:clear-resets`) daily.
 
 ---
@@ -238,7 +238,7 @@ This automates:
 ## 9. Razorpay Webhook Configuration
 
 In your **Razorpay Live Dashboard** (`https://dashboard.razorpay.com/#/app/webhooks`):
-1. **Webhook URL**: `https://hisabkitab.in/webhook/razorpay`
+1. **Webhook URL**: `https://udhaarhisab.in/webhook/razorpay`
 2. **Secret**: Enter the exact secret string defined in `RAZORPAY_WEBHOOK_SECRET` in `.env`.
 3. **Active Events**:
    - `payment.captured`
@@ -250,7 +250,7 @@ In your **Razorpay Live Dashboard** (`https://dashboard.razorpay.com/#/app/webho
 ## 10. Final Pre-Launch Verification Checklist
 
 - [ ] `APP_ENV=production` and `APP_DEBUG=false` confirmed.
-- [ ] Application opens over HTTPS with valid SSL certificate (`https://hisabkitab.in`).
+- [ ] Application opens over HTTPS with valid SSL certificate (`https://udhaarhisab.in`).
 - [ ] Storage directory has permissions `775` owned by `www-data:www-data`.
 - [ ] Public storage symlink (`public/storage`) is connected.
 - [ ] Registered a test shop account to verify SMS/Email and database insertion.

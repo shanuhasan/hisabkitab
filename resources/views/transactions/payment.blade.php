@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Jama Lena (Receive Payment) — HisabKitab')
+@section('title', 'Jama Lena (Receive Payment) — UdhaarHisab')
 @section('header', 'Jama Lena (Received Payment from Customer)')
 @section('subheader', 'Record payments received in cash, UPI, bank transfer or other modes')
 

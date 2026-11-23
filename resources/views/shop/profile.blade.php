@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Shop Profile & Settings — HisabKitab')
+@section('title', 'Shop Profile & Settings — UdhaarHisab')
 @section('header', 'Shop Settings & Profile')
 @section('subheader', 'Manage your business identity, store address, contact details, and branding')
 

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Customers (Grahak) — HisabKitab')
+@section('title', 'Customers (Grahak) — UdhaarHisab')
 @section('header', 'Customers (Grahak Suchi)')
 @section('subheader', 'Manage your customer credit accounts, track balances and send reminders')
 

@@ -1,6 +1,6 @@
-# HisabKitab — Database Restoration Guide
+# UdhaarHisab — Database Restoration Guide
 
-This guide covers restoring the HisabKitab database from a backup file during disaster recovery, data corruption incidents, or migration to a new server.
+This guide covers restoring the UdhaarHisab database from a backup file during disaster recovery, data corruption incidents, or migration to a new server.
 
 ---
 
@@ -9,24 +9,24 @@ This guide covers restoring the HisabKitab database from a backup file during di
 > [!CAUTION]
 > Restoring a database completely overwrites all existing tables and data! Always follow these safety rules:
 > 1. Put the application in maintenance mode: `php artisan down --secret="rescue-mode-pass"`
-> 2. Create an immediate snapshot of the current state before restoring: `php artisan hisabkitab:backup`
+> 2. Create an immediate snapshot of the current state before restoring: `php artisan udhaarhisab:backup`
 > 3. Verify that all background queue workers are stopped: `sudo supervisorctl stop all`
 
 ---
 
-## 2. Restoring Using the HisabKitab Artisan Command
+## 2. Restoring Using the UdhaarHisab Artisan Command
 
-HisabKitab includes an interactive restoration command:
+UdhaarHisab includes an interactive restoration command:
 
 ```bash
 # 1. Restore the most recent backup automatically
-php artisan hisabkitab:restore
+php artisan udhaarhisab:restore
 
 # 2. Or restore a specific backup file
-php artisan hisabkitab:restore backup-hisabkitab-2026-11-22_035839.sql
+php artisan udhaarhisab:restore backup-udhaarhisab-2026-11-22_035839.sql
 
 # 3. For non-interactive automated scripts, pass --force
-php artisan hisabkitab:restore backup-hisabkitab-2026-11-22_035839.sql --force
+php artisan udhaarhisab:restore backup-udhaarhisab-2026-11-22_035839.sql --force
 ```
 
 ---
@@ -40,7 +40,7 @@ If the application is unreachable or you are provisioning a fresh server:
 # gunzip -c /var/backups/backup.sql.gz > /tmp/backup.sql
 
 # Import database into MySQL
-mysql -u hisabkitab_user -p hisabkitab_production < /var/www/hisabkitab/storage/app/backups/backup-hisabkitab-YYYY-MM-DD_HHmmss.sql
+mysql -u udhaarhisab_user -p udhaarhisab_production < /var/www/udhaarhisab/storage/app/backups/backup-udhaarhisab-YYYY-MM-DD_HHmmss.sql
 ```
 
 ---

@@ -101,7 +101,7 @@ class RegisterController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('dashboard')->with('success', 'Swagat hai! Aapka HisabKitab digital khata ban gaya hai.');
+        return redirect()->route('dashboard')->with('success', 'Swagat hai! Aapka UdhaarHisab digital khata ban gaya hai.');
     }
 }
 

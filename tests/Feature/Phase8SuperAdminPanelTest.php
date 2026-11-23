@@ -79,7 +79,7 @@ class Phase8SuperAdminPanelTest extends TestCase
             'tenant_id' => $this->tenant1->id,
             'name' => 'Root Super Admin',
             'phone' => '9999999999',
-            'email' => 'superadmin@hisabkitab.in',
+            'email' => 'superadmin@udhaarhisab.in',
             'password' => Hash::make('adminpassword123'),
             'role' => 'super_admin',
             'is_active' => true,
@@ -266,8 +266,8 @@ class Phase8SuperAdminPanelTest extends TestCase
     public function test_super_admin_can_update_platform_settings(): void
     {
         $response = $this->actingAs($this->superAdmin)->post(route('admin.settings.update'), [
-            'site_name' => 'HisabKitab Pro India',
-            'contact_email' => 'help@hisabkitab.in',
+            'site_name' => 'UdhaarHisab Pro India',
+            'contact_email' => 'help@udhaarhisab.in',
             'contact_phone' => '+91 88000 11223',
             'currency' => 'INR',
             'timezone' => 'Asia/Kolkata',
@@ -277,8 +277,8 @@ class Phase8SuperAdminPanelTest extends TestCase
 
         $response->assertRedirect(route('admin.settings.index'));
 
-        $this->assertEquals('HisabKitab Pro India', PlatformSetting::get('site_name'));
-        $this->assertEquals('help@hisabkitab.in', PlatformSetting::get('contact_email'));
+        $this->assertEquals('UdhaarHisab Pro India', PlatformSetting::get('site_name'));
+        $this->assertEquals('help@udhaarhisab.in', PlatformSetting::get('contact_email'));
         $this->assertEquals('45', PlatformSetting::get('trial_days'));
 
         $this->assertDatabaseHas('admin_activity_logs', [

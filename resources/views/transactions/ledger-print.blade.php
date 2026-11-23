@@ -147,7 +147,7 @@
         </div>
 
         <div class="text-center text-muted small mt-4 pt-2 border-top" style="font-size: 0.75rem;">
-            This is a computer-generated account statement managed digitally on HisabKitab SaaS.
+            This is a computer-generated account statement managed digitally on UdhaarHisab SaaS.
         </div>
     </div>
 </body>

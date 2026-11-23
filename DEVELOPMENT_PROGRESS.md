@@ -1,4 +1,4 @@
-# Development Progress Tracker — HisabKitab SaaS
+# Development Progress Tracker — UdhaarHisab SaaS
 
 | Phase | Description | Status | Completion Date |
 |---|---|---|---|
@@ -23,9 +23,9 @@
   - Added dedicated Razorpay configuration to `config/services.php` to ensure cached configuration reads `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, and `RAZORPAY_WEBHOOK_SECRET` reliably without depending on direct `env()` calls.
   - Created `.env.production.example` template with production defaults (`APP_ENV=production`, `APP_DEBUG=false`, `FORCE_HTTPS=true`, database pooling, logging to daily channel, secure session cookies).
 - **Automated Backup & Restoration Engine**:
-  - Implemented `hisabkitab:backup` console command (`DatabaseBackupCommand`) with timestamped SQL generation and automatic 7-day retention pruning.
-  - Implemented `hisabkitab:restore` console command (`DatabaseRestoreCommand`) supporting point-in-time restoration from backup files.
-  - Implemented `hisabkitab:check-subscriptions` console command (`CheckSubscriptionsCommand`) for daily expiry scans.
+  - Implemented `udhaarhisab:backup` console command (`DatabaseBackupCommand`) with timestamped SQL generation and automatic 7-day retention pruning.
+  - Implemented `udhaarhisab:restore` console command (`DatabaseRestoreCommand`) supporting point-in-time restoration from backup files.
+  - Implemented `udhaarhisab:check-subscriptions` console command (`CheckSubscriptionsCommand`) for daily expiry scans.
   - Registered daily cron schedules in `routes/console.php` for subscription checks, database backups, and password reset token pruning.
 - **Documentation & Operational Guides**:
   - Created `DEPLOYMENT.md`: Comprehensive guide for Ubuntu Linux, Nginx virtual hosts, Let's Encrypt SSL/Certbot, Supervisor background queue workers, and system cron.

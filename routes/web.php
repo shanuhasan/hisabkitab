@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes — HisabKitab SaaS
+| Web Routes — UdhaarHisab SaaS
 |--------------------------------------------------------------------------
 */
 

@@ -1,7 +1,7 @@
-# Project Architecture — HisabKitab SaaS
+# Project Architecture — UdhaarHisab SaaS
 
 ## 1. System Overview
-**HisabKitab** is a secure, high-performance, multi-tenant digital udhaar (customer credit and payment ledger) SaaS application designed for Indian small shopkeepers (kirana stores, retail, wholesalers, service providers).
+**UdhaarHisab** is a secure, high-performance, multi-tenant digital udhaar (customer credit and payment ledger) SaaS application designed for Indian small shopkeepers (kirana stores, retail, wholesalers, service providers).
 
 ### Core Goals
 - Allow shop owners to record credit (udhaar) and payment (jama) quickly on mobile or desktop.

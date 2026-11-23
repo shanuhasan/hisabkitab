@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard — ' . ($tenant->name ?? 'HisabKitab'))
+@section('title', 'Dashboard — ' . ($tenant->name ?? 'UdhaarHisab'))
 @section('header', ($tenant->name ?? 'Shop') . ' Dashboard')
 @section('subheader', 'Real-time overview of customer credit, collections, and financial analytics')
 

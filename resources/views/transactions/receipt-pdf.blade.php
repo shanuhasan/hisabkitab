@@ -244,7 +244,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            HisabKitab SaaS &bull; Digital Khata &amp; Udhaar Ledger System &bull; Computer Generated Official Receipt
+            UdhaarHisab SaaS &bull; Digital Khata &amp; Udhaar Ledger System &bull; Computer Generated Official Receipt
         </div>
     </div>
 

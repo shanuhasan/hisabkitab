@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('title', 'Forgot Password — HisabKitab')
+@section('title', 'Forgot Password — UdhaarHisab')
 
 @section('content')
 <div class="row justify-content-center py-5">

@@ -17,8 +17,8 @@ class PlatformSettingsController extends Controller
     public function index(): View
     {
         $settings = [
-            'site_name' => PlatformSetting::get('site_name', 'HisabKitab SaaS'),
-            'contact_email' => PlatformSetting::get('contact_email', 'support@hisabkitab.in'),
+            'site_name' => PlatformSetting::get('site_name', 'UdhaarHisab SaaS'),
+            'contact_email' => PlatformSetting::get('contact_email', 'support@udhaarhisab.in'),
             'contact_phone' => PlatformSetting::get('contact_phone', '+91 98765 43210'),
             'currency' => PlatformSetting::get('currency', 'INR'),
             'timezone' => PlatformSetting::get('timezone', 'Asia/Kolkata'),

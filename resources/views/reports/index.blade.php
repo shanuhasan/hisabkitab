@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Financial Reports — HisabKitab')
+@section('title', 'Financial Reports — UdhaarHisab')
 @section('header', 'Business & Financial Reports')
 @section('subheader', 'Audited financial summaries, customer balances, and collections')
 

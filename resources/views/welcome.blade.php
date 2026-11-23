@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('title', 'HisabKitab — Digital Udhaar Management SaaS for Indian Shopkeepers')
+@section('title', 'UdhaarHisab — Digital Udhaar Management SaaS for Indian Shopkeepers')
 
 @section('content')
 <div class="row align-items-center py-5">
@@ -13,7 +13,7 @@
             <span class="text-primary">100% Secure & Simple</span>
         </h1>
         <p class="lead text-muted mb-4">
-            Replace paper bahi-khata notebooks with HisabKitab. Track customer credit (Udhaar Dena), record payments (Jama Lena), send instant WhatsApp reminders, and generate audited PDF statements.
+            Replace paper bahi-khata notebooks with UdhaarHisab. Track customer credit (Udhaar Dena), record payments (Jama Lena), send instant WhatsApp reminders, and generate audited PDF statements.
         </p>
         <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
             <a href="{{ Route::has('register') ? route('register') : url('/register') }}" class="btn btn-primary btn-lg px-4 shadow-sm fw-semibold">

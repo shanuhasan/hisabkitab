@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Subscription & Plans — HisabKitab SaaS')
+@section('title', 'Subscription & Plans — UdhaarHisab SaaS')
 @section('header', 'Subscription Management')
 @section('subheader', 'Manage your SaaS plan, customer limits, and billing history')
 
@@ -280,7 +280,7 @@ function initiateCheckout(planId, planName, planPrice) {
                 key: order.key_id,
                 amount: order.amount,
                 currency: order.currency,
-                name: 'HisabKitab SaaS',
+                name: 'UdhaarHisab SaaS',
                 description: 'Subscription for ' + order.plan_name,
                 order_id: order.order_id,
                 prefill: {

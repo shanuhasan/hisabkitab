@@ -14,7 +14,7 @@ class CheckSubscriptionsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'hisabkitab:check-subscriptions';
+    protected $signature = 'udhaarhisab:check-subscriptions';
 
     /**
      * The console command description.

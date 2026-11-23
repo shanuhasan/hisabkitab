@@ -14,14 +14,14 @@ class DatabaseBackupCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'hisabkitab:backup {--retention=7 : Days of daily backups to keep}';
+    protected $signature = 'udhaarhisab:backup {--retention=7 : Days of daily backups to keep}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a timestamped SQL backup of the HisabKitab database with retention pruning';
+    protected $description = 'Create a timestamped SQL backup of the UdhaarHisab database with retention pruning';
 
     /**
      * Execute the console command.
@@ -34,10 +34,10 @@ class DatabaseBackupCommand extends Command
         }
 
         $timestamp = now()->format('Y-m-d_His');
-        $fileName = "backup-hisabkitab-{$timestamp}.sql";
+        $fileName = "backup-udhaarhisab-{$timestamp}.sql";
         $filePath = "{$backupDir}/{$fileName}";
 
-        $this->info("Starting database backup for HisabKitab at: {$timestamp}");
+        $this->info("Starting database backup for UdhaarHisab at: {$timestamp}");
 
         try {
             $this->performBackup($filePath);
@@ -75,7 +75,7 @@ class DatabaseBackupCommand extends Command
         }
 
         fwrite($handle, "-- --------------------------------------------------------\n");
-        fwrite($handle, "-- HisabKitab SaaS Automated Database Backup\n");
+        fwrite($handle, "-- UdhaarHisab SaaS Automated Database Backup\n");
         fwrite($handle, "-- Generated: " . now()->toIso8601String() . "\n");
         fwrite($handle, "-- Database: {$database}\n");
         fwrite($handle, "-- --------------------------------------------------------\n\n");

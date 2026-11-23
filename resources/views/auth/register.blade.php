@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('title', 'Shopkeeper Registration — HisabKitab')
+@section('title', 'Shopkeeper Registration — UdhaarHisab')
 
 @section('content')
 <div class="row justify-content-center py-4">
@@ -92,7 +92,7 @@
                     <div class="form-check mb-4">
                         <input class="form-check-input @error('terms') is-invalid @enderror" type="checkbox" name="terms" id="terms" {{ old('terms') ? 'checked' : '' }} required>
                         <label class="form-check-label small text-muted" for="terms">
-                            I agree to the Terms of Service & Privacy Policy for HisabKitab.
+                            I agree to the Terms of Service & Privacy Policy for UdhaarHisab.
                         </label>
                         @error('terms')
                             <div class="invalid-feedback d-block">{{ $message }}</div>

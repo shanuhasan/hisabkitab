@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Transaction History — HisabKitab')
+@section('title', 'Transaction History — UdhaarHisab')
 @section('header', 'Transaction History (Len-Den Register)')
 @section('subheader', 'Complete chronological ledger of all customer credits and payments')
 

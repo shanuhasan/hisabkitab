@@ -3,7 +3,7 @@
     <!-- Brand / Logo Area -->
     <div class="hk-sidebar-brand">
         <i class="bi bi-journal-bookmark-fill"></i>
-        <span>Hisab<span class="text-info">Kitab</span></span>
+        <span>Udhaar<span class="text-info">Hisab</span></span>
     </div>
 
     <!-- Shop Identity Badge -->

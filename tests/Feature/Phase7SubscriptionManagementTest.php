@@ -65,7 +65,7 @@ class Phase7SubscriptionManagementTest extends TestCase
             'tenant_id' => $this->tenant->id,
             'name' => 'Platform Super Admin',
             'phone' => '9999999999',
-            'email' => 'admin@hisabkitab.com',
+            'email' => 'admin@udhaarhisab.com',
             'password' => Hash::make('admin123'),
             'role' => 'super_admin',
             'is_active' => true,
@@ -132,7 +132,7 @@ class Phase7SubscriptionManagementTest extends TestCase
         $paymentId = 'pay_test_' . bin2hex(random_bytes(6));
 
         // 2. Generate valid HMAC-SHA256 signature
-        $secret = config('services.razorpay.secret', env('RAZORPAY_KEY_SECRET', 'test_secret_hisabkitab_123'));
+        $secret = config('services.razorpay.secret', env('RAZORPAY_KEY_SECRET', 'test_secret_udhaarhisab_123'));
         $validSignature = hash_hmac('sha256', $orderId . '|' . $paymentId, $secret);
 
         // 3. Post verification

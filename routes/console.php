@@ -10,15 +10,15 @@ Artisan::command('inspire', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Production Scheduled Tasks — HisabKitab SaaS
+| Production Scheduled Tasks — UdhaarHisab SaaS
 |--------------------------------------------------------------------------
 */
 
 // Check expired merchant subscriptions daily at midnight
-Schedule::command('hisabkitab:check-subscriptions')->daily();
+Schedule::command('udhaarhisab:check-subscriptions')->daily();
 
 // Automated daily database backup at 02:00 AM
-Schedule::command('hisabkitab:backup --retention=7')->dailyAt('02:00');
+Schedule::command('udhaarhisab:backup --retention=7')->dailyAt('02:00');
 
 // Clean up expired password reset tokens daily
 Schedule::command('auth:clear-resets')->daily();

@@ -250,7 +250,7 @@ class Phase5DashboardAndReportingTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertEquals('application/pdf', $response->headers->get('Content-Type'));
-        $this->assertStringContainsString('HisabKitab-Report-period', (string) $response->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('UdhaarHisab-Report-period', (string) $response->headers->get('Content-Disposition'));
     }
 
     public function test_csv_export_returns_streamed_csv_with_proper_headers(): void
@@ -265,7 +265,7 @@ class Phase5DashboardAndReportingTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertEquals('text/csv; charset=UTF-8', $response->headers->get('Content-Type'));
-        $this->assertStringContainsString('HisabKitab-period', (string) $response->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('UdhaarHisab-period', (string) $response->headers->get('Content-Disposition'));
     }
 
     public function test_cross_tenant_reporting_isolation(): void

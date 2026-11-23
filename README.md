@@ -1,7 +1,7 @@
-# HisabKitab — Multi-Tenant Udhaar Management SaaS
+# UdhaarHisab — Multi-Tenant Udhaar Management SaaS
 
 ## Project Overview
-HisabKitab is an enterprise-grade, multi-tenant digital udhaar (credit & payment) management SaaS platform built for Indian small shopkeepers and local businesses.
+UdhaarHisab is an enterprise-grade, multi-tenant digital udhaar (credit & payment) management SaaS platform built for Indian small shopkeepers and local businesses.
 
 ## Key Features
 - **Strict Multi-Tenancy**: Complete server-side tenant isolation via global scopes and policies.
@@ -19,8 +19,8 @@ HisabKitab is an enterprise-grade, multi-tenant digital udhaar (credit & payment
 - Chart.js & DomPDF
 
 ## Project Documentation
-- [System Architecture](file:///d:/xampp/htdocs/my_projects/hisabkitab/PROJECT_ARCHITECTURE.md)
-- [Database Schema Design](file:///d:/xampp/htdocs/my_projects/hisabkitab/DATABASE.md)
-- [Development Progress & Phase Tracker](file:///d:/xampp/htdocs/my_projects/hisabkitab/DEVELOPMENT_PROGRESS.md)
-- [Changelog](file:///d:/xampp/htdocs/my_projects/hisabkitab/CHANGELOG.md)
+- [System Architecture](file:///d:/xampp/htdocs/my_projects/udhaarhisab/PROJECT_ARCHITECTURE.md)
+- [Database Schema Design](file:///d:/xampp/htdocs/my_projects/udhaarhisab/DATABASE.md)
+- [Development Progress & Phase Tracker](file:///d:/xampp/htdocs/my_projects/udhaarhisab/DEVELOPMENT_PROGRESS.md)
+- [Changelog](file:///d:/xampp/htdocs/my_projects/udhaarhisab/CHANGELOG.md)
 

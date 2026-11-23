@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Add Customer — HisabKitab')
+@section('title', 'Add Customer — UdhaarHisab')
 @section('header', 'Add Customer (Naya Grahak Jodein)')
 @section('subheader', 'Create a new customer credit ledger account for your shop')
 

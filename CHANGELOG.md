@@ -1,15 +1,15 @@
 # Changelog
 
-All notable changes to the HisabKitab SaaS project will be documented in this file.
+All notable changes to the UdhaarHisab SaaS project will be documented in this file.
 
 ## [Phase 10] - 2026-11-22
 ### Added
 - Created production environment template `.env.production.example` with hardened security settings (`APP_ENV=production`, `APP_DEBUG=false`, `FORCE_HTTPS=true`, secure cookie flags, daily error logging).
 - Updated `app/Providers/AppServiceProvider.php` to enforce HTTPS when in production or when `FORCE_HTTPS=true`, and set `Paginator::useBootstrapFive()`.
 - Added Razorpay service mapping to `config/services.php` to support Laravel `config:cache` without breaking `SubscriptionService`.
-- Created artisan command `hisabkitab:backup` (`app/Console/Commands/DatabaseBackupCommand.php`) with timestamped database dumps and 7-day retention pruning.
-- Created artisan command `hisabkitab:restore` (`app/Console/Commands/DatabaseRestoreCommand.php`) for interactive or forced database restoration.
-- Created artisan command `hisabkitab:check-subscriptions` (`app/Console/Commands/CheckSubscriptionsCommand.php`) for scanning and marking expired tenant subscriptions.
+- Created artisan command `udhaarhisab:backup` (`app/Console/Commands/DatabaseBackupCommand.php`) with timestamped database dumps and 7-day retention pruning.
+- Created artisan command `udhaarhisab:restore` (`app/Console/Commands/DatabaseRestoreCommand.php`) for interactive or forced database restoration.
+- Created artisan command `udhaarhisab:check-subscriptions` (`app/Console/Commands/CheckSubscriptionsCommand.php`) for scanning and marking expired tenant subscriptions.
 - Registered automated daily tasks in `routes/console.php` (subscription expiry check, database backup at 02:00 AM, and password reset token cleanup).
 - Created comprehensive operational and production documentation:
   - `DEPLOYMENT.md` (Complete Nginx, PHP-FPM, Supervisor, SSL, and Cron deployment manual).
@@ -115,7 +115,7 @@ All notable changes to the HisabKitab SaaS project will be documented in this fi
 ## [Phase 1] - 2026-11-22
 ### Added
 - Created clean Laravel 12.73.0 project on PHP 8.2.12.
-- Configured MySQL 8.2 database (`hisabkitab`) and environment variables.
+- Configured MySQL 8.2 database (`udhaarhisab`) and environment variables.
 - Built multi-tenant database migrations with `DECIMAL(15,2)` precision and foreign keys.
 - Implemented `TenantScope` and `BelongsToTenant` trait for strict server-side tenant isolation.
 - Created reusable layouts (`app.blade.php`, `guest.blade.php`, `header.blade.php`, `sidebar.blade.php`, `footer.blade.php`, `alerts.blade.php`, `welcome.blade.php`).

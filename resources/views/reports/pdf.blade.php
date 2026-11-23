@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HisabKitab - {{ ucfirst($reportType) }} Report</title>
+    <title>UdhaarHisab - {{ ucfirst($reportType) }} Report</title>
     <style>
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
@@ -364,7 +364,7 @@
 
     <!-- Footer -->
     <div class="footer">
-        Generated securely by HisabKitab SaaS &bull; Digital Udhaar &amp; Khata Management for Indian Businesses &bull; Confidential
+        Generated securely by UdhaarHisab SaaS &bull; Digital Udhaar &amp; Khata Management for Indian Businesses &bull; Confidential
     </div>
 
 </body>

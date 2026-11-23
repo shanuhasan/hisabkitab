@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Udhaar Dena (Give Credit) — HisabKitab')
+@section('title', 'Udhaar Dena (Give Credit) — UdhaarHisab')
 @section('header', 'Udhaar Dena (Gave Credit to Customer)')
 @section('subheader', 'Record items given on credit or debit entry in customer ledger')
 

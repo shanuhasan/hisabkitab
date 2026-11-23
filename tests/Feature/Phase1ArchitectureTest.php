@@ -47,7 +47,7 @@ class Phase1ArchitectureTest extends TestCase
             'tenant_id' => null,
             'name' => 'Platform Admin',
             'phone' => '9999999999',
-            'email' => 'admin@hisabkitab.test',
+            'email' => 'admin@udhaarhisab.test',
             'password' => bcrypt('admin123'),
             'role' => 'super_admin',
             'is_active' => true,

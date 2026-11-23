@@ -22,8 +22,8 @@ class SubscriptionService
 
     public function __construct()
     {
-        $this->razorpayKey = config('services.razorpay.key') ?? env('RAZORPAY_KEY_ID', 'rzp_test_hisabkitab_key');
-        $this->razorpaySecret = config('services.razorpay.secret') ?? env('RAZORPAY_KEY_SECRET', 'test_secret_hisabkitab_123');
+        $this->razorpayKey = config('services.razorpay.key') ?? env('RAZORPAY_KEY_ID', 'rzp_test_udhaarhisab_key');
+        $this->razorpaySecret = config('services.razorpay.secret') ?? env('RAZORPAY_KEY_SECRET', 'test_secret_udhaarhisab_123');
         $this->webhookSecret = config('services.razorpay.webhook_secret') ?? env('RAZORPAY_WEBHOOK_SECRET', 'test_webhook_secret_123');
     }
 
@@ -154,7 +154,7 @@ class SubscriptionService
         $orderId = 'order_' . strtoupper(bin2hex(random_bytes(8)));
 
         // If live Razorpay API credentials are provided and non-dummy, interact with Razorpay
-        if (!str_contains($this->razorpayKey, 'rzp_test_hisabkitab_key') && strlen($this->razorpaySecret) > 15) {
+        if (!str_contains($this->razorpayKey, 'rzp_test_udhaarhisab_key') && strlen($this->razorpaySecret) > 15) {
             try {
                 $response = Http::withBasicAuth($this->razorpayKey, $this->razorpaySecret)
                     ->post('https://api.razorpay.com/v1/orders', [

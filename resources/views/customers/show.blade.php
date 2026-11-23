@@ -130,7 +130,7 @@
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <div>
             <h6 class="mb-0 fw-bold text-dark">
-                <i class="bi bi-journal-text me-1 text-primary"></i> Customer Ledger (Hisab-Kitab)
+                <i class="bi bi-journal-text me-1 text-primary"></i> Customer Ledger (Udhaar-Hisab)
             </h6>
             <small class="text-muted">Complete financial timeline and running balances</small>
         </div>

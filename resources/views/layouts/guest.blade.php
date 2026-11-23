@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', config('app.name', 'HisabKitab')) — Indian Shopkeeper Udhaar SaaS</title>
+    <title>@yield('title', config('app.name', 'UdhaarHisab')) — Indian Shopkeeper Udhaar SaaS</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,7 @@
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url('/') }}">
                 <i class="bi bi-journal-bookmark-fill text-primary me-2 fs-4"></i>
-                <span>Hisab<span class="text-primary">Kitab</span></span>
+                <span>Udhaar<span class="text-primary">Hisab</span></span>
             </a>
 
             <div class="ms-auto d-flex align-items-center gap-2">
@@ -51,7 +51,7 @@
     <!-- Guest Footer -->
     <footer class="bg-white border-top py-4 mt-auto">
         <div class="container text-center text-muted small">
-            <p class="mb-1">&copy; {{ date('Y') }} HisabKitab SaaS. Built for Indian Small Businesses & Kirana Stores.</p>
+            <p class="mb-1">&copy; {{ date('Y') }} UdhaarHisab SaaS. Built for Indian Small Businesses & Kirana Stores.</p>
             <p class="mb-0 text-secondary">Simple, Secure & Reliable Digital Credit/Udhaar Management.</p>
         </div>
     </footer>
