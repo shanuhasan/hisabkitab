@@ -28,6 +28,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Mobile App Demo (calls /api/v1) — enabled via config('app.mobile_demo')
+if (config('app.mobile_demo')) {
+    Route::view('/app-demo', 'app-demo')->name('app-demo');
+}
+
 // Guest Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');

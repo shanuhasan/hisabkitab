@@ -16,6 +16,12 @@ return [
     'name' => env('APP_NAME', 'Laravel'),
 
     /*
+    | Mobile app demo at /app-demo — a phone-style page that calls /api/v1.
+    | On by default only in the local environment; set MOBILE_DEMO=true to force it on.
+    */
+    'mobile_demo' => (bool) env('MOBILE_DEMO', env('APP_ENV', 'production') === 'local'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
