@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ReportService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -12,9 +13,15 @@ class DashboardController extends Controller
     /**
      * Show main shop dashboard with real-time statistics, charts, and recent activity.
      */
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         $user = auth()->user();
+
+        // Super admins don't own a shop; send them to the platform admin panel.
+        if ($user->isSuperAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+
         $tenant = $user->tenant;
 
         $dashboardData = $tenant

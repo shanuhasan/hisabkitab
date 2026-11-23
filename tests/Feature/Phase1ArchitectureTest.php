@@ -16,8 +16,8 @@ class Phase1ArchitectureTest extends TestCase
     {
         $response = $this->get('/');
         $response->assertStatus(200);
+        $response->assertSee('Udhaar');
         $response->assertSee('Hisab');
-        $response->assertSee('Kitab');
         $response->assertSee('Digital Udhaar', false);
         $response->assertSee('Jama Khata', false);
     }

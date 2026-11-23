@@ -16,6 +16,7 @@
 
         <!-- Right: Actions, Language & User Menu -->
         <div class="d-flex align-items-center gap-3">
+            @unless(auth()->user()?->isSuperAdmin())
             <!-- Quick Add Button -->
             <div class="dropdown">
                 <button class="btn btn-primary btn-sm dropdown-toggle fw-semibold px-3" type="button" id="quickActionDrop" data-bs-toggle="dropdown" aria-expanded="false">
@@ -40,6 +41,7 @@
                     </li>
                 </ul>
             </div>
+            @endunless
 
             <!-- User Profile Dropdown -->
             <div class="dropdown">
@@ -57,6 +59,7 @@
                         <div class="fw-bold small">{{ auth()->user()->name ?? 'Shopkeeper' }}</div>
                         <div class="text-muted text-truncate" style="font-size: 0.75rem;">{{ auth()->user()->email ?? 'user@udhaarhisab.test' }}</div>
                     </li>
+                    @unless(auth()->user()?->isSuperAdmin())
                     <li>
                         <a class="dropdown-item py-2 small" href="{{ url('/shop/profile') }}">
                             <i class="bi bi-shop me-2 text-muted"></i> Shop Profile
@@ -68,6 +71,7 @@
                         </a>
                     </li>
                     <li><hr class="dropdown-divider"></li>
+                    @endunless
                     <li>
                         <form method="POST" action="{{ Route::has('logout') ? route('logout') : url('/logout') }}">
                             @csrf

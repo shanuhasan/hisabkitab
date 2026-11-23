@@ -6,6 +6,26 @@
         <span>Udhaar<span class="text-info">Hisab</span></span>
     </div>
 
+@php($isSuperAdmin = auth()->user()?->isSuperAdmin())
+
+@if($isSuperAdmin)
+    <!-- Platform Admin Badge -->
+    <div class="px-3 py-2 bg-dark bg-opacity-50 border-bottom border-secondary border-opacity-25">
+        <div class="d-flex align-items-center">
+            <div class="rounded-circle bg-warning bg-opacity-25 text-warning p-2 me-2 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                <i class="bi bi-shield-lock-fill fs-5"></i>
+            </div>
+            <div class="text-truncate">
+                <div class="fw-semibold text-white small text-truncate">
+                    {{ auth()->user()->name }}
+                </div>
+                <div class="text-muted" style="font-size: 0.75rem;">
+                    Platform Super Admin
+                </div>
+            </div>
+        </div>
+    </div>
+@else
     <!-- Shop Identity Badge -->
     <div class="px-3 py-2 bg-dark bg-opacity-50 border-bottom border-secondary border-opacity-25">
         <div class="d-flex align-items-center">
@@ -22,9 +42,45 @@
             </div>
         </div>
     </div>
+@endif
 
     <!-- Navigation Menu Items -->
     <nav class="hk-sidebar-menu">
+        @if($isSuperAdmin)
+        <div class="hk-sidebar-heading text-warning">Super Admin Panel</div>
+        <ul class="nav flex-column mb-3">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                    <i class="bi bi-speedometer text-warning"></i>
+                    <span>Admin Overview</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.shops*') ? 'active' : '' }}" href="{{ route('admin.shops.index') }}">
+                    <i class="bi bi-shop text-info"></i>
+                    <span>Manage Shops</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.plans*') ? 'active' : '' }}" href="{{ route('admin.plans.index') }}">
+                    <i class="bi bi-tags-fill text-primary"></i>
+                    <span>SaaS Plans</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.payments*') ? 'active' : '' }}" href="{{ route('admin.payments.index') }}">
+                    <i class="bi bi-cash-stack text-success"></i>
+                    <span>Gateway Payments</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">
+                    <i class="bi bi-gear-fill text-secondary"></i>
+                    <span>Platform Settings</span>
+                </a>
+            </li>
+        </ul>
+        @else
         <div class="hk-sidebar-heading">Main Overview</div>
         <ul class="nav flex-column mb-3">
             <li class="nav-item">
@@ -94,41 +150,6 @@
                 </a>
             </li>
         </ul>
-
-        @if(auth()->user() && auth()->user()->role === 'super_admin')
-            <div class="hk-sidebar-heading text-warning">Super Admin Panel</div>
-            <ul class="nav flex-column mb-3">
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
-                        <i class="bi bi-speedometer text-warning"></i>
-                        <span>Admin Overview</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.shops*') ? 'active' : '' }}" href="{{ route('admin.shops.index') }}">
-                        <i class="bi bi-shop text-info"></i>
-                        <span>Manage Shops</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.plans*') ? 'active' : '' }}" href="{{ route('admin.plans.index') }}">
-                        <i class="bi bi-tags-fill text-primary"></i>
-                        <span>SaaS Plans</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.payments*') ? 'active' : '' }}" href="{{ route('admin.payments.index') }}">
-                        <i class="bi bi-cash-stack text-success"></i>
-                        <span>Gateway Payments</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">
-                        <i class="bi bi-gear-fill text-secondary"></i>
-                        <span>Platform Settings</span>
-                    </a>
-                </li>
-            </ul>
         @endif
     </nav>
 
