@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant.active' => \App\Http\Middleware\EnsureTenantIsActive::class,
             'subscription' => \App\Http\Middleware\EnforceSubscriptionLimits::class,
             'super_admin' => \App\Http\Middleware\EnsureUserIsSuperAdmin::class,
+            'shop_user' => \App\Http\Middleware\EnsureUserIsShopUser::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [

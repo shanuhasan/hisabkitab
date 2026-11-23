@@ -285,5 +285,38 @@ class Phase8SuperAdminPanelTest extends TestCase
             'action' => 'platform_settings_updated',
         ]);
     }
-}
 
+    public function test_super_admin_is_redirected_away_from_shop_pages(): void
+    {
+        $shopPages = ['/dashboard', '/customers', '/customers/create', '/transactions/credit',
+            '/transactions/payment', '/transactions/history', '/reports', '/shop/profile', '/subscription'];
+
+        foreach ($shopPages as $url) {
+            $this->actingAs($this->superAdmin)
+                ->get($url)
+                ->assertRedirect(route('admin.dashboard'));
+        }
+
+        $this->actingAs($this->superAdmin)
+            ->post('/customers', ['name' => 'Should Not Save', 'phone' => '9000000001'])
+            ->assertRedirect(route('admin.dashboard'));
+        $this->assertDatabaseMissing('customers', ['name' => 'Should Not Save']);
+    }
+
+    public function test_super_admin_sidebar_hides_shop_menu(): void
+    {
+        $this->actingAs($this->superAdmin)
+            ->get(route('admin.dashboard'))
+            ->assertOk()
+            ->assertSee('Platform Super Admin')
+            ->assertSee('Manage Shops')
+            ->assertDontSee('Customers (Grahak)')
+            ->assertDontSee('Quick Entry');
+    }
+
+    public function test_shop_owner_can_still_open_shop_pages(): void
+    {
+        $this->actingAs($this->owner1)->get('/dashboard')->assertOk();
+        $this->actingAs($this->owner1)->get('/customers')->assertOk();
+    }
+}
